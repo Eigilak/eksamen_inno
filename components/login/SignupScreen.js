@@ -10,7 +10,7 @@ import firebase from 'firebase';
 
 
 /*Samme præncip som Login form, bare med oprettelse af bruger i handle submit*/
-export default class signupScreen extends React.Component {
+export default class SignupScreen extends React.Component {
     state = {
         email: '',
         password: '',

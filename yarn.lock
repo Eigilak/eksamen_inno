@@ -1008,7 +1008,7 @@
     "xcode" "^3.0.0"
     "xml-js" "^1.6.11"
 
-"@expo/vector-icons@^10.0.2":
+"@expo/vector-icons@^10.0.2", "@expo/vector-icons@^10.2.1":
   "integrity" "sha512-clYQZFLeU2y23n03hXg18EEsZS5c73sJJnfderztfSAqkUXkfUtv07fwuprYwbHIvgFkw6L7R6xJOCVYtS85iQ=="
   "resolved" "https://registry.npmjs.org/@expo/vector-icons/-/vector-icons-10.2.1.tgz"
   "version" "10.2.1"

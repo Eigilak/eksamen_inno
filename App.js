@@ -1,49 +1,59 @@
-import { StatusBar } from 'expo-status-bar';
+/*Frameworks*/
 import * as React from 'react';
 import { Alert,Platform,LogBox} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator } from 'react-navigation-stack';
-import LoginScreen from "./components/Login/LoginScreen";
-import SignUpScreen from "./components/Login/SignUpScreen";
-import GLOBAL from './components/User.js'
-import firebase from "firebase";
-import LogOutScreen from "./components/admin/LogOutScreen";
 import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
+import GLOBAL from './components/modules/GlobalUser'
+import firebase from "firebase";
+
+
+/*Screens*/
+import LoginScreen from "./components/login/LoginScreen";
+import SignupScreen from "./components/login/SignupScreen";
+import logout_spoofScreen from "./components/login/Logout_spoofScreen";
+import CreateVisitCardScreen from "./components/admin/CreateVisitCardScreen";
+import MyVisitCardsScreen from "./components/admin/MyVisitCardsScreen";
+import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScreen";
+import {createStackNavigator} from "react-navigation-stack";
 
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
     LogBox.ignoreAllLogs(true)
 }
 
-/*Dette er min navigator til når man er logget ind*/
-const AdminBottomNavigator = createBottomTabNavigator({
-    Dashboard:{
-        screen:DashboardScreen,
+const CreateVisitCardStack = createStackNavigator({
+    CreateVisitCard:{
+        screen:CreateVisitCardScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
                 <AntDesign name="dashboard" size={24} color={tintColor} />
             )
         }
     },
-    CreateItem:{
-        screen:CreateItemScreen,
+})
+
+/*Dette er min navigator til når man er logget ind*/
+const AdminBottomNavigator = createBottomTabNavigator({
+    MyVisitCards:{
+        screen:MyVisitCardsScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
-                <AntDesign name="pluscircle" size={24} color={tintColor} />
+                <AntDesign name="dashboard" size={24} color={tintColor} />
             )
         }
     },
-    SettingsScreen:{
-        screen:SettingsScreen,
+    RecievedVisitCards:{
+        screen:RecievedVisitCardsScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
-                <AntDesign name="setting" size={24} color={tintColor} />                )
+                <AntDesign name="dashboard" size={24} color={tintColor} />
+            )
         }
     },
     /*Sætter en spoof screen til at håndtere onpress som gør jeg logger ud med firebase*/
     LogOut: {
-        screen: LogOutScreen,
+        screen: logout_spoofScreen,
         navigationOptions: ({navigation}) => ({
             tabBarOnPress: (scene, jumpToIndex) => {
                 if(Platform.OS === 'web')
@@ -99,18 +109,10 @@ const PublicBottomNavigator = createBottomTabNavigator({
         }
     },
     Signup:{
-        screen:SignUpScreen,
+        screen:SignupScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
                 <MaterialIcons name="account-circle" size={24} color={tintColor} />             )
-        }
-    },
-    ScanIt:{
-        screen:ScanScreen,
-        navigationOptions:{
-            tabBarIcon:({tintColor}) =>(
-                <AntDesign name="scan1" size={24} color={tintColor} />
-            )
         }
     }
 });
@@ -145,14 +147,13 @@ export default class App extends React.Component{
     /*Init*/
     init = () =>{
         const fireBaseConfig ={
-            apiKey: "AIzaSyAAMyAaetUPuzNzy26yDezUyBO2n8DYYYA",
-            authDomain: "obligatorisk2.firebaseapp.com",
-            databaseURL: "https://obligatorisk2.firebaseio.com",
-            projectId: "obligatorisk2",
-            storageBucket: "obligatorisk2.appspot.com",
-            messagingSenderId: "866031032215",
-            appId: "1:866031032215:web:82e6cdff8a2a3da44996d2",
-            measurementId: "G-GLFEXKB6LV"
+            apiKey: "AIzaSyAlOUjJY2erM9bvxtre9RYVCVF_dLXOkmY",
+            authDomain: "eksamen-innovation.firebaseapp.com",
+            databaseURL: "https://eksamen-innovation.firebaseio.com",
+            projectId: "eksamen-innovation",
+            storageBucket: "eksamen-innovation.appspot.com",
+            messagingSenderId: "1004695638499",
+            appId: "1:1004695638499:web:bc9d8a5a25f8385bda90d6"
         }
 // vigtigt at tilføje nedestående if statement, da ellers init firebase flere gange
         if (!firebase.apps.length) {
