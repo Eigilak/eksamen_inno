@@ -21,7 +21,12 @@ const GlobalStyles = StyleSheet.create({
     header: {
         fontSize: 20,
     },
+    /*ProfileScreen*/
+    myInfoContainer:{
+    },
+    myInfoRightContainer:{
 
+    }
 });
 
 export default GlobalStyles

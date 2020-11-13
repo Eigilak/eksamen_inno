@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
 import GLOBAL from './components/modules/GlobalUser'
 import firebase from "firebase";
-
+import {createStackNavigator} from "react-navigation-stack";
 
 /*Screens*/
 import LoginScreen from "./components/login/LoginScreen";
@@ -15,24 +15,12 @@ import logout_spoofScreen from "./components/login/Logout_spoofScreen";
 import CreateVisitCardScreen from "./components/admin/CreateVisitCardScreen";
 import MyVisitCardsScreen from "./components/admin/MyVisitCardsScreen";
 import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScreen";
-import {createStackNavigator} from "react-navigation-stack";
+import ProfilScreen from "./components/admin/ProfilScreen";
 
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
     LogBox.ignoreAllLogs(true)
 }
-
-const CreateVisitCardStack = createStackNavigator({
-    CreateVisitCard:{
-        screen:CreateVisitCardScreen,
-        navigationOptions:{
-            tabBarIcon:({tintColor}) =>(
-                <AntDesign name="dashboard" size={24} color={tintColor} />
-            )
-        }
-    },
-})
-
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
     MyVisitCards:{
@@ -45,6 +33,14 @@ const AdminBottomNavigator = createBottomTabNavigator({
     },
     RecievedVisitCards:{
         screen:RecievedVisitCardsScreen,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="dashboard" size={24} color={tintColor} />
+            )
+        }
+    },
+    ProfileScreen:{
+        screen:ProfilScreen,
         navigationOptions:{
             tabBarIcon:({tintColor}) =>(
                 <AntDesign name="dashboard" size={24} color={tintColor} />
@@ -98,6 +94,31 @@ const AdminBottomNavigator = createBottomTabNavigator({
 
     }
 });
+
+const AdminStackNavigation = createStackNavigator({
+    BottomNavigation:{
+        screen:AdminBottomNavigator,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="dashboard" size={24} color={tintColor} />
+            ),
+            headerShown:false
+        }
+    },
+    CreateVisitCard:{
+        screen:CreateVisitCardScreen,
+        navigationOptions:{
+            tabBarIcon:({tintColor}) =>(
+                <AntDesign name="dashboard" size={24} color={tintColor} />
+            ),
+            headerShown:false
+        }
+    }
+
+
+})
+
+
 /*Min navigator hvis man ikke er logget ind*/
 const PublicBottomNavigator = createBottomTabNavigator({
     Login:{
@@ -118,8 +139,8 @@ const PublicBottomNavigator = createBottomTabNavigator({
 });
 
 
-const LoginContainer = createAppContainer(PublicBottomNavigator)
-const AdminContainer = createAppContainer(AdminBottomNavigator)
+const LoginContainer = createAppContainer(PublicBottomNavigator);
+const AdminContainer = createAppContainer(AdminStackNavigation);
 
 
 
@@ -159,10 +180,13 @@ export default class App extends React.Component{
         if (!firebase.apps.length) {
             firebase.initializeApp(fireBaseConfig);
         }
+
+        firebase.auth().signOut()
+
     }
     /*Set Auth state*/
-    observeAuth = () => {
-        firebase.auth().onAuthStateChanged(user => {
+    observeAuth = async () => {
+       await firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
 
             GLOBAL.user.setState({
@@ -173,7 +197,7 @@ export default class App extends React.Component{
 
     /*Render afhængig om jeg er logget ind*/
     render() {
-        if(!this.state.user){
+        if(this.state.user){
             return <LoginContainer/>
         }else {
             return <AdminContainer/>
