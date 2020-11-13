@@ -11,6 +11,7 @@ import {
 import firebase from 'firebase';
 import TitleModule from "../modules/TitleModule.js";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import GlobalStyles from "../modules/GlobalStyle";
 
 
 export default class loginScreen extends React.Component {
@@ -55,26 +56,26 @@ export default class loginScreen extends React.Component {
     render = () => {
         const { errorMessage, email, password, isCompleted } = this.state;
         return (
-            <View style={styles.mainContainer}>
+            <View style={GlobalStyles.mainContainer}>
                 <TitleModule title="Velkommen til BelongTO"/>
                 <MaterialCommunityIcons name="home-map-marker" size={60} color="#0E71EB" />
-                <View style={styles.innerContainer}>
-                    <Text style={styles.header}>Login</Text>
+                <View style={GlobalStyles.innerContainer}>
+                    <Text style={GlobalStyles.header}>Login</Text>
                     <TextInput
                         placeholder="email"
                         value={email}
                         onChangeText={this.handleChangeEmail}
-                        style={styles.inputField}
+                        style={GlobalStyles.inputField}
                     />
                     <TextInput
                         placeholder="password"
                         value={password}
                         onChangeText={this.handleChangePassword}
                         secureTextEntry
-                        style={styles.inputField}
+                        style={GlobalStyles.inputField}
                     />
                     {errorMessage && (
-                        <Text style={styles.error}>Error: {errorMessage}</Text>
+                        <Text style={GlobalStyles.error}>Error: {errorMessage}</Text>
                     )}
                     {this.renderButton()}
                 </View>
@@ -90,26 +91,3 @@ export default class loginScreen extends React.Component {
         return <Button onPress={this.handleSubmit} title="Login" />;
     };
 }
-/*Styles*/
-const styles = StyleSheet.create({
-    mainContainer:{
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    innerContainer:{
-        minWidth:'80%'
-    },
-    error: {
-        color: 'red',
-    },
-    inputField: {
-        borderWidth: 1,
-        margin: 10,
-        padding: 10,
-    },
-    header: {
-        fontSize: 20,
-    },
-});
