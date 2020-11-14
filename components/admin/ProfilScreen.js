@@ -11,9 +11,6 @@ export default class ProfilScreen extends React.Component {
         super();
     }
 
-    componentDidMount() {
-        this.getCurrentUserAttributes()
-    }
 
     state={
         id:firebase.auth().currentUser.uid,
@@ -48,6 +45,11 @@ export default class ProfilScreen extends React.Component {
             user.email, currentPassword);
         return user.reauthenticateWithCredential(cred);
     }
+
+    componentDidMount() {
+        this.getCurrentUserAttributes()
+    }
+
     getCurrentUserAttributes = () =>{
         try {
             var allUsers =[]
@@ -66,12 +68,12 @@ export default class ProfilScreen extends React.Component {
                             }
                         });
                     });
-                    allUserAttributes.map((userAttribute,index)=>{
-                        var userAttributeKey = Object.keys(userAttribute)
-                        var userAttributeVal = Object.values(userAttribute)
+                    var objAllUserAttributes={}
+                    Object.assign(objAllUserAttributes, allUserAttributes);
 
-                        this.setState({userAttributeKey:userAttributeVal})
-                    })
+                    const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
+                    this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                    console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
 
                 });
         }catch (e) {
@@ -82,11 +84,10 @@ export default class ProfilScreen extends React.Component {
 
     /*Gem brugerprofil*/
     saveProfile = () =>{
+        var {id,name,email,password,address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state
         var currentEmail = firebase.auth().currentUser.email;
-        var newEmail = this.state.email
-        var currentPassword = this.state.password
-
-        var {id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state
+        var newEmail = email
+        var currentPassword = password
 
          if(currentEmail !== newEmail ){
              this.reauthenticate(currentPassword).then(() => {
