@@ -14,9 +14,13 @@ const GlobalStyles = StyleSheet.create({
         color: 'red',
     },
     inputField: {
-        borderWidth: 1,
+        borderWidth: 2,
+        borderRadius:4,
         margin: 10,
         padding: 10,
+    },
+    inputFieldError:{
+      borderColor:"red"
     },
     header: {
         fontSize: 20,

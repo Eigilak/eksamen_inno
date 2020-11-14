@@ -1,35 +1,132 @@
 import firebase from "firebase";
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View,Button,Alert} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
+import GLOBAL from "../modules/GlobalUser"
+
 
 export default class ProfilScreen extends React.Component {
     constructor() {
         super();
     }
 
+    componentDidMount() {
+        this.getCurrentUserAttributes()
+    }
+
     state={
-        email:'',
+        id:firebase.auth().currentUser.uid,
+        user:firebase.auth().currentUser,
+        email:firebase.auth().currentUser.email,
+        password:'',
         name:'',
         address:'',
         jobTitle:'',
         company:'',
         linkedInUrl:'',
         facebookUrl:'',
-        instagram:''
+        instagram:'',
+        error:true,
     }
 
+    /*Håndter alle ændringer af felter*/
     handleChangeEmail = email => this.setState({ email });
+    handleChangePassword = password => this.setState({ password });
     handleChangeName = name => this.setState({ name });
     handleChangeCompany = company => this.setState({ company });
+    handleChangeJobTitle = jobTitle => this.setState({ jobTitle });
     handleChangeAddress = address => this.setState({ address });
     handleChangeFacebookUrl = facebookUrl => this.setState({ facebookUrl });
     handleChangeLinkedInUrl = linkedInUrl => this.setState({ linkedInUrl });
-    handleChangeInstragram = instagram => this.setState({ instagram });
+    handleChangeInstagram = instagram => this.setState({ instagram });
+
+    /*For ikke at logge ud efter email update køres denne funktion*/
+    reauthenticate = (currentPassword) => {
+        var user = firebase.auth().currentUser;
+        var cred = firebase.auth.EmailAuthProvider.credential(
+            user.email, currentPassword);
+        return user.reauthenticateWithCredential(cred);
+    }
+    getCurrentUserAttributes = () =>{
+        try {
+            var allUsers =[]
+            firebase
+                .database()
+                .ref('/UserAttributes')
+                .once('value', snapshot => {
+                    allUsers.push(snapshot.val());
+                    var allUserAttributes=[]
+                    /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
+                    allUsers.map((user_item,index) => {
+                        var item_vals = Object.values(user_item)
+                        item_vals.map((item_val,index)=>{
+                            if(item_val.id === firebase.auth().currentUser.uid){
+                                allUserAttributes.push(item_val)
+                            }
+                        });
+                    });
+                    allUserAttributes.map((userAttribute,index)=>{
+                        var userAttributeKey = Object.keys(userAttribute)
+                        var userAttributeVal = Object.values(userAttribute)
+
+                        this.setState({userAttributeKey:userAttributeVal})
+                    })
+
+                });
+        }catch (e) {
+            console.log("Fejl!! \n",e)
+        }
+
+    }
+
+    /*Gem brugerprofil*/
+    saveProfile = () =>{
+        var currentEmail = firebase.auth().currentUser.email;
+        var newEmail = this.state.email
+        var currentPassword = this.state.password
+
+        var {id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state
+
+         if(currentEmail !== newEmail ){
+             this.reauthenticate(currentPassword).then(() => {
+                 var user = firebase.auth().currentUser;
+                 user.updateEmail(newEmail).then(() => {
+                     console.log("Email updated!");
+                 }).catch((error) => { console.log("Fejl i password \n",error); });
+             }).catch((error) => { console.log(error); });
+         }
+        try {
+             var allUsers;
+
+            firebase
+                .database()
+                .ref('/UserAttributes')
+                .on('value', snapshot => {
+                    allUsers = snapshot.val()
+                });
+
+            if(!allUsers){
+                const reference = firebase
+                    .database()
+                    .ref('/UserAttributes')
+                    .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
+                if(Platform.OS !== "web"){
+                    Alert.alert(`Gemt`);
+                }
+                else {
+                    alert('Gemt!')
+                }
+            }else {
+
+            }
+        } catch (error) {
+            Alert.alert(`Error: ${error.message}`);
+        }
+    }
 
     render() {
-        const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram } = this.state;
+        const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
                 <TitleModule title={"Din profil"}/>
@@ -84,6 +181,15 @@ export default class ProfilScreen extends React.Component {
                             onChangeText={this.handleChangeInstagram}
                             style={GlobalStyles.inputField}
                         />
+                    </View>
+                    <View>
+                        <TextInput
+                            placeholder="Verify your password"
+                            value={password}
+                            onChangeText={this.handleChangePassword}
+                            style={GlobalStyles.inputField}
+                        />
+                        <Button title={"Gem"} onPress={this.saveProfile}/>
                     </View>
                 </View>
             </View>

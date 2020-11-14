@@ -188,16 +188,13 @@ export default class App extends React.Component{
     observeAuth = async () => {
        await firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
-
-            GLOBAL.user.setState({
-                user:user
-            })
         });
     }
 
     /*Render afhængig om jeg er logget ind*/
     render() {
-        if(this.state.user){
+        const {user} = this.state;
+        if(!user){
             return <LoginContainer/>
         }else {
             return <AdminContainer/>
