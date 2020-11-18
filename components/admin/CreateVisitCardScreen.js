@@ -30,17 +30,16 @@ export default class CreateVisitCardScreen extends React.Component {
     handleJobTitleField = text => this.setState({ jobTitle: text });
     handleLinkedInUrlField = text => this.setState({ linkedInUrl: text });
     handlenameField = text => this.setState({  name: text });
-    handleSave = () => {
+    handleSave = async () => {
             const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name } = this.state;
             const {navigation} = this.props;
             try {
 
-              const reference = firebase
+               await firebase
                   .database()
                   .ref('/visitkort/')
                   .push({ address, company,facebookUrl,id, instagram,jobTitle,linkedInUrl,name });
 
-              console.log(reference)
               Alert.alert(`Saved`);
               this.setState({
                address: '',
@@ -49,7 +48,6 @@ export default class CreateVisitCardScreen extends React.Component {
                   instagram: '',
                jobTitle:'',
                linkedInUrl: '',
-
               });
                 navigation.goBack();
 
