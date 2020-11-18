@@ -10,11 +10,10 @@ export default class MyVisitCardsScreen extends React.Component {
     navigateCreate = () => {
     }
 
-
-
+    /* Her oprettes et array der indeholder information om visitkort*/
     render() {
         const spoof_visitkort = [
-                {address: "Addresse",
+            {address: "Addresse",
                 company: "Virk",
                 facebookUrl: "facebook",
                 id: "osd4VTO7vPhCIajcRpqrIBDwH9z2",
@@ -22,7 +21,7 @@ export default class MyVisitCardsScreen extends React.Component {
                 jobTitle: "titel",
                 linkedInUrl: "linkedin",
                 name: "Navn"},
-                {address: "Addresse2",
+            {address: "Addresse2",
                 company: "Virk2",
                 facebookUrl: "facebook",
                 id: "osd4VTO7vPhCIajcRpqrIBDwH9z2",
@@ -30,11 +29,21 @@ export default class MyVisitCardsScreen extends React.Component {
                 jobTitle: "titel",
                 linkedInUrl: "linkedin",
                 name: "Navn"},
-
         ]
+
+        //Lav en konstant kaldt render VisitCard som tager en parametre med til vores VisitCardItem kompnent
+        const renderspoof_visitkortItem = ({item}) =>(
+            <VisitCardItem VisitCardName={item}/>
+        )
 
         return(
             <View style={GlobalStyles.mainContainer}>
+                <FlatList
+                    style={styles.inlineScroll}
+                    data={spoof_visitkort}
+                    renderItem={renderspoof_visitkortItem()}
+                    keyExtractor={item => item}
+                />
                 <Text>TEST</Text>
                 <Button
                     title={"Opret visitkort"}
@@ -44,3 +53,9 @@ export default class MyVisitCardsScreen extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    inlineScroll:{
+        height: 100
+    },
+});
