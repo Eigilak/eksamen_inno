@@ -6,24 +6,17 @@ import VisitCardItems from "./items/VisitCardItems";
 
 const DATA = [
   {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
+    address: "Addresse",
+    company: "Virk",
+    facebookUrl: "Facebook",
+    id: "0001",
+    instagram: "Insta",
+    jobTitle: "Titel",
+    linkedInUrl: "Linkedin",
+    name: "Navn"
+  }
 ];
 
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
 
 
 export default class MyVisitCardsScreen extends React.Component {
@@ -35,40 +28,40 @@ export default class MyVisitCardsScreen extends React.Component {
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-        const VisitCard =
-            {address: "Addresse",
-                company: "Virk",
-                facebookUrl: "facebook",
-                id: "osd4VTO7vPhCIajcRpqrIBDwH9z2",
-                instagram: "insta",
-                jobTitle: "titel",
-                linkedInUrl: "linkedin",
-                name: "Navn"}
-        ;
+      //Lav en konstant kaldt render Carbrands som tager en parametre med til vores CarbrandItem kompnent
+      const renderCarBrandItem = ({item}) =>(
+        <VisitCardItems VisitCardName={item}/>
+      )
 
-        //Lav en konstant kaldt render VisitCard som tager en parametre med til vores VisitCardItem kompnent
-        const renderVisitCard = ({item}) =>(
-            <VisitCardItems VisitCardName={item}/>
-        )
-
-      const renderItem = ({ item }) => (
-        <Item title={item.title} />
-      );
-
-      return (
-        <SafeAreaView style={styles.container}>
+      return(
+        <View style={styles.container}>
+          {/* Title med styling*/ }
+          <Text style={{ fontSize: 20, textAlign:'center',paddingTop:40 }}> 2. FlatList</Text>
+          {/* FlatList komponent med title propertien og en værdi HANS*/ }
           <FlatList
+            style={styles.inlineScroll}
             data={DATA}
-            renderItem={renderItem}
+            renderItem={renderCarBrandItem}
             keyExtractor={item => item.id}
           />
-        </SafeAreaView>
-      );
+
+        </View>
+
+      )
     }
+
 }
 
 const styles = StyleSheet.create({
-    inlineScroll:{
-        height: 100
-    },
+  inlineScroll:{
+    height: 100
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
+
+
