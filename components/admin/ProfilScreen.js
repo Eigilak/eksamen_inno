@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import {StyleSheet, Text, TextInput, View,Button,Alert} from 'react-native';
+import {StyleSheet, Text, TextInput, View,Button,Alert,ScrollView} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
@@ -25,6 +25,7 @@ export default class ProfilScreen extends React.Component {
         facebookUrl:'',
         instagram:'',
         error:true,
+        response:{}
     }
 
     /*Håndter alle ændringer af felter*/
@@ -49,10 +50,11 @@ export default class ProfilScreen extends React.Component {
     componentDidMount() {
         this.getCurrentUserAttributes()
     }
-    getOwnAttributes = (allUsers,MyFireBaseId) =>{
+    async getOwnAttributes (MyFireBaseId){
+        this.setState({response:''})
 
         var allUsers =[]
-        firebase
+       await firebase
             .database()
             .ref('/UserAttributes')
             .once('value', snapshot => {
@@ -60,36 +62,38 @@ export default class ProfilScreen extends React.Component {
 
                 var allUserAttributes = []
 
-                console.log(allUserAttributes)
-
+                console.log(allUsers)
+                let push = true;
                 /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
                 allUsers.map((user_item, index) => {
                     var item_vals = Object.values(user_item)
+
                     item_vals.map((item_val, index) => {
                         if (item_val.id === MyFireBaseId) {
                             allUserAttributes.push(item_val)
                         }
                     });
                 });
-                var objAllUserAttributes = {}
-                Object.assign(objAllUserAttributes, allUserAttributes);
 
-                return objAllUserAttributes
+                var objAllUserAttributes = {}
+
+                Object.assign(objAllUserAttributes, allUserAttributes);
+                console.log("Mine attributter2",objAllUserAttributes)
+
+                this.setState({response: objAllUserAttributes})
+
             });
     }
 
 
-    getCurrentUserAttributes = () =>{
+    getCurrentUserAttributes = async () =>{
         try {
-
+            let myAttributes = [];
             /*Kald denne metode for at tjek info på opgivet brugere*/
-            var myAttributes = this.getOwnAttributeID(allUsers,firebase.auth().currentUser.uid)
+             await this.getOwnAttributes(firebase.auth().currentUser.uid)
 
-            const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = myAttributes[0]
+            const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state.response[0]
             this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
-            console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
-
-
         }catch (e) {
             console.log("Fejl!! \n",e)
         }
@@ -97,12 +101,13 @@ export default class ProfilScreen extends React.Component {
     }
 
     /*Gem brugerprofil*/
-    saveProfile = () =>{
+    saveProfile = async () =>{
         var {id,name,email,password,address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state
         var currentEmail = firebase.auth().currentUser.email;
         var newEmail = email
         var currentPassword = password
 
+        /*Hvis nuværende email ikke er ligmed din fra state, så opdater mailen*/
          if(currentEmail !== newEmail ){
              this.reauthenticate(currentPassword).then(() => {
                  var user = firebase.auth().currentUser;
@@ -112,32 +117,36 @@ export default class ProfilScreen extends React.Component {
              }).catch((error) => { console.log(error); });
          }
         try {
-             var allUsers;
+             var myAttributes=[]
+            myAttributes.push(this.state.response[0])
 
-            firebase
-                .database()
-                .ref('/UserAttributes/')
-                .on('value', snapshot => {
-                    allUsers = snapshot.val()
-                });
-
-            if(!allUsers){
-
-
-
-
+            if(!myAttributes){
+                console.log("hvis der ikke er data")
                 const reference = firebase
                     .database()
-                    .ref('/UserAttributes/'+myAttributeId)
+                    .ref('/UserAttributes/')
                     .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
-                if(Platform.OS !== "web"){
-                    Alert.alert(`Gemt`);
-                }
-                else {
-                    alert('Gemt!')
-                }
-            }else {
 
+            }else {
+                console.log("hvis der er data",myAttributes)
+                try {
+
+                    myAttributes.map((attribute, index) => {
+                        attribute.id
+                        var item_vals = Object.values(attribute)
+                        console.log(item_vals)
+                    });
+
+                    await firebase
+                        .database()
+                        .ref('/UserAttributes/' + id)
+                        // Vi bruger update, så kun de felter vi angiver, bliver ændret
+                        .update({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
+                    // Når bilen er ændret, går vi tilbage.
+                    Alert.alert("Din info er nu opdateret");
+                } catch (error) {
+                   console.log("Mine fejl",error)
+                }
             }
         } catch (error) {
             Alert.alert(`Error: ${error.message}`);
@@ -148,69 +157,71 @@ export default class ProfilScreen extends React.Component {
         const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
-                <TitleModule title={"Din profil"}/>
-                <View style={GlobalStyles.myInfoContainer}>
-                    <Text> Oplysninger</Text>
-                    <View style={GlobalStyles.myInfoRightContainer}>
-                        <TextInput
-                            placeholder="email"
-                            value={email}
-                            onChangeText={this.handleChangeEmail}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="name"
-                            value={name}
-                            onChangeText={this.handleChangeName}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="Addresse "
-                            value={address}
-                            onChangeText={this.handleChangeAddress}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="company"
-                            value={company}
-                            onChangeText={this.handleChangeCompany}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="Jobtitel"
-                            value={jobTitle}
-                            onChangeText={this.handleChangeJobTitle}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="facebook link"
-                            value={facebookUrl}
-                            onChangeText={this.handleChangeFacebookUrl}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="LinkedIn Url"
-                            value={linkedInUrl}
-                            onChangeText={this.handleChangeLinkedInUrl}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="instagram"
-                            value={instagram}
-                            onChangeText={this.handleChangeInstagram}
-                            style={GlobalStyles.inputField}
-                        />
+                <ScrollView>
+                    <TitleModule title={"Din profil"}/>
+                    <View style={GlobalStyles.myInfoContainer}>
+                        <Text> Oplysninger</Text>
+                        <View style={GlobalStyles.myInfoRightContainer}>
+                            <TextInput
+                                placeholder="email"
+                                value={email}
+                                onChangeText={this.handleChangeEmail}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="name"
+                                value={name}
+                                onChangeText={this.handleChangeName}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="Addresse "
+                                value={address}
+                                onChangeText={this.handleChangeAddress}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="company"
+                                value={company}
+                                onChangeText={this.handleChangeCompany}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="Jobtitel"
+                                value={jobTitle}
+                                onChangeText={this.handleChangeJobTitle}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="facebook link"
+                                value={facebookUrl}
+                                onChangeText={this.handleChangeFacebookUrl}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="LinkedIn Url"
+                                value={linkedInUrl}
+                                onChangeText={this.handleChangeLinkedInUrl}
+                                style={GlobalStyles.inputField}
+                            />
+                            <TextInput
+                                placeholder="instagram"
+                                value={instagram}
+                                onChangeText={this.handleChangeInstagram}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+                        <View>
+                            <TextInput
+                                placeholder="Verify your password"
+                                value={password}
+                                onChangeText={this.handleChangePassword}
+                                style={GlobalStyles.inputField}
+                            />
+                            <Button title={"Gem"} onPress={this.saveProfile}/>
+                        </View>
                     </View>
-                    <View>
-                        <TextInput
-                            placeholder="Verify your password"
-                            value={password}
-                            onChangeText={this.handleChangePassword}
-                            style={GlobalStyles.inputField}
-                        />
-                        <Button title={"Gem"} onPress={this.saveProfile}/>
-                    </View>
-                </View>
+                </ScrollView>
             </View>
         )
     }
