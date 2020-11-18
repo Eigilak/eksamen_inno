@@ -25,6 +25,9 @@ const GlobalStyles = StyleSheet.create({
     header: {
         fontSize: 20,
     },
+    inlineScroll:{
+    height: 100
+    },
     /*ProfileScreen*/
     myInfoContainer:{
     },
