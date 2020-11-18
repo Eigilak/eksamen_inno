@@ -105,6 +105,13 @@ export default class CreateVisitCardScreen extends React.Component {
     }
 
 
+    handleBack = () => {
+        const {navigation} = this.props;
+        navigation.goBack()
+
+
+    }
+
 
     render() {
         const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
@@ -161,12 +168,10 @@ export default class CreateVisitCardScreen extends React.Component {
                         />
                     </View>
 
-                <Button title="Gem visitkort" onPress={this.handleSave}
+                <Button title="Gem visitkort" onPress={this.handleSave} />
+                <Button title="Gå tilbage" onPress={this.handleBack}
 
                 />
-
-
-
              </ScrollView>
             </SafeAreaView>
         );
