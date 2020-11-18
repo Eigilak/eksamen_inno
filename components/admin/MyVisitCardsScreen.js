@@ -30,17 +30,6 @@ export default class MyVisitCardsScreen extends React.Component {
 
         return(
             <View style={GlobalStyles.mainContainer}>
-                <FlatList
-                    style={styles.inlineScroll}
-                    data={spoof_visitkort}
-                    renderItem={renderspoof_visitkortItem()}
-                    keyExtractor={item => item}
-                />
-                <Text>TEST</Text>
-                <Button
-                    title={"Opret visitkort"}
-                    onPress={() => {this.props.navigation.navigate('CreateVisitCard')}}
-                />
             </View>
         )
     }
