@@ -2,7 +2,8 @@ import firebase from "firebase";
 import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-import VisitCardItems from "./items/VisitCardItems";
+import NewVisitCardItem from "./items/NewVisitCardItem";
+import VisitCardItem from "./items/VisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
 
 export default class MyVisitCardsScreen extends React.Component {
@@ -10,7 +11,8 @@ export default class MyVisitCardsScreen extends React.Component {
         visitCards:[]
     }
 
-    componentDidMount() {
+    constructor() {
+        super();
         this.getYourVisitCards()
     }
 
@@ -22,29 +24,10 @@ export default class MyVisitCardsScreen extends React.Component {
             await firebase
                 .database()
                 .ref('/visitkort')
-                .on('value', snapshot => {
-
-                    allVisitCards.push(snapshot.val());
-                    console.log(snapshot.val())
-
-                    var cleanedVisitCards = []
-                    /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                    allVisitCards.map((visit_cardItem, index) => {
-                        var item_vals = Object.values(visit_cardItem)
-                        /*Inner loop for at se om ID er samme som opgivet*/
-                        item_vals.map((item_val, index) => {
-                            if (item_val.id === firebase.auth().currentUser.uid) {
-                                /*Kun en gang push Tabel ID med dit eget ID*/
-                                cleanedVisitCards.push(item_val)
-                            }
-                        });
-                    });
-
-                    console.log("Mine visitkort",cleanedVisitCards);
-
-
-                    this.setState({visitCards:cleanedVisitCards})
-
+                .on('value', snapshot =>{
+                    if(snapshot.val()){
+                        this.setState({visitCards:snapshot.val()})
+                    }
                 });
         }catch (e) {
             console.log("Fejl!! \n",e)
@@ -54,24 +37,44 @@ export default class MyVisitCardsScreen extends React.Component {
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-      //Lav en konstant kaldt render Carbrands som tager en parametre med til vores CarbrandItem kompnent
-      const renderCarBrandItem = ({item}) =>(
-        <VisitCardItems VisitCardName={item}/>
-      )
+        const { visitCards } = this.state;
+        // Vi viser ingenting hvis der ikke er data
+        if (!visitCards) {
+            return null;
+        }
 
-        const {visitCards} = this.state;
+        // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
+        const visitCardsArray = Object.values(visitCards);
+        // Vi skal også bruge alle IDer, så vi tager alle keys også.
+        const visitCardsKeys = Object.keys(visitCards);
+
+
+        const renderCardItem = ({item,index}) => {
+            if (item.id === firebase.auth().currentUser.uid) {
+                return  <NewVisitCardItem
+                    VisitCardItem={item}
+                    id={visitCards[index]}
+                />
+            }
+        };
+
       return(
         <View style={styles.container}>
           {/* Title med styling*/ }
           <TitleModule title = "Mine Visit Kort"/>
           {/* FlatList komponent med title propertien og en værdi HANS*/ }
-          <FlatList
-            style={styles.inlineScroll}
-            data={visitCards}
-            renderItem={renderCarBrandItem}
-            keyExtractor={(item, index) => visitCards[index]}
+            {visitCardsArray.length > 0 ?
 
-          />
+                <FlatList
+                    style={styles.inlineScroll}
+                    data={visitCardsArray}
+                    renderItem={renderCardItem}
+                    keyExtractor={(item,index)=>visitCardsKeys[index] }
+                />
+
+                : <Text> Ingen oprettet sad VisitKort</Text>
+            }
+
             <Button
                 title={"Opret visitkort"}
                 onPress={() => {this.props.navigation.navigate('CreateVisitCard')}}

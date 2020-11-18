@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import {Text, View, Image, Dimensions, Platform, ProgressViewIOS, ProgressBarAndroid, ImageBackground, TouchableOpacity, ScrollView, Linking
-} from "react-native";
+import {Text, View, Image, Dimensions, Platform, ProgressViewIOS, ProgressBarAndroid, ImageBackground, TouchableOpacity, ScrollView, Linking} from "react-native";
 import propTypes from 'prop-types'
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
