@@ -21,14 +21,12 @@ const DATA = [
     company: "Virk",
     facebookUrl: "Facebook",
     id: "0001",
-    instagram: "Insta",
-    jobTitle: "Titel2",
-    linkedInUrl: "Linkedin",
-    name: "Navn2"
+    instagram: "https://www.instagram.com/nadiadejgaard/",
+    jobTitle: "Top Model",
+    linkedInUrl: "https://www.linkedin.com/in/nadia-dejgaard-05056217a/",
+    name: "Nadia Dejgaard Nielsen"
   }
 ];
-
-
 
 export default class MyVisitCardsScreen extends React.Component {
     constructor() {
