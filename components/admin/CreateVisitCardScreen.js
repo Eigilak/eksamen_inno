@@ -3,7 +3,7 @@ import {Button, StyleSheet, Text, View,ScrollView,SafeAreaView, Alert, TextInput
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 
-//import firebase from 'firebase';
+
 
 export default class CreateVisitCardScreen extends React.Component {
 
@@ -27,12 +27,16 @@ export default class CreateVisitCardScreen extends React.Component {
       handlenameField = text => this.setState({  name: text });
 
             handleSave = () => {
-                const { adress, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name } = this.state;
+                const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name } = this.state;
+
                 try {
+
                   const reference = firebase
                       .database()
                       .ref('/visitkort/')
-                      .push({ adress, company,facebookUrl,id, instagram,jobTitle,linkedInUrl,name });
+                      .push({ address, company,facebookUrl,id, instagram,jobTitle,linkedInUrl,name });
+
+                  console.log(reference)
                   Alert.alert(`Saved`);
                   this.setState({
                    address: '',
