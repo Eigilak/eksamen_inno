@@ -71,6 +71,8 @@ export default class ProfilScreen extends React.Component {
                     var objAllUserAttributes={}
                     Object.assign(objAllUserAttributes, allUserAttributes);
 
+                    console.log(allUserAttributes)
+
                     const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
                     this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
                     console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
