@@ -1,13 +1,17 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import * as React from 'react';
-import GlobalStyles from "../modules/GlobalStyle";
+//import GlobalStyles from ".../modules/GlobalStyle";
 
 export default class VisitCardItems extends React.Component{
   render() {
     const{VisitCardName} = this.props
     return(
-      <CardTwo
-        title={"John Bob will"}
+      <View>
+        <Text>" {VisitCardName.name}"</Text>
+      </View>
+
+      /*<CardTwo
+        title={VisitCardName.name}
         subTitle={"Devlopper"}
         profile={{
           uri:
@@ -19,7 +23,7 @@ export default class VisitCardItems extends React.Component{
         }}
         icon={"apple"}
         iconColor={"red"}
-      />
+      />*/
     )
   }
 }
