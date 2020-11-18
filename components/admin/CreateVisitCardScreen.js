@@ -2,6 +2,7 @@ import firebase from "firebase";
 import {Button, StyleSheet, Text, View,ScrollView,SafeAreaView, Alert, TextInput} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
+import TitleModule from "../modules/TitleModule";
 
 
 
@@ -112,55 +113,67 @@ export default class CreateVisitCardScreen extends React.Component {
     render() {
         const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
         return(
+
             <SafeAreaView style={GlobalStyles.mainContainer}>
-                <ScrollView>
+                <TitleModule title = "Opret et nyt visitkort"/>
+                <ScrollView style={GlobalStyles.createContainer}>
                     <View>
-                    <Text >address</Text>
-                    <TextInput
-                        value={address}
-                          onChangeText={this.handleAdressField}
-                          />
-                           </View>
+                        <Text >address</Text>
+                        <TextInput
+                            value={address}
+                            onChangeText={this.handleAdressField}
+                            style={GlobalStyles.inputField}
+                        />
+                    </View>
                     <View>
-                    <Text >company</Text>
-                    <TextInput
-                        value={company}
-                          onChangeText={this.handleCompanyField}
-                          />
-                           </View>
+                        <Text >company</Text>
+                        <TextInput
+                            value={company}
+                            onChangeText={this.handleCompanyField}
+                            style={GlobalStyles.inputField}
+                        />
+                     </View>
                      <View>
                      <Text >facebookUrl</Text>
                      <TextInput
                          value={facebookUrl}
                            onChangeText={this.handlefacebookUrlField}
-                           />
+                         style={GlobalStyles.inputField}
+                     />
                             </View>
                       <View>
                       <Text >instagram</Text>
                       <TextInput
                           value={instagram}
                             onChangeText={this.handleInstagramField}
-                            />
+                          style={GlobalStyles.inputField}
+
+                      />
                              </View>
                       <View>
                       <Text >jobTitle</Text>
                       <TextInput
                           value={jobTitle}
                             onChangeText={this.handleJobTitleField}
-                            />
+                          style={GlobalStyles.inputField}
+
+                      />
                              </View>
                       <View>
                       <Text >linkedInUrl</Text>
                       <TextInput
                           value={linkedInUrl}
                             onChangeText={this.handleLinkedInUrlField}
-                            />
+                          style={GlobalStyles.inputField}
+
+                      />
                              </View>
                     <View>
                         <Text >Navn:</Text>
                         <TextInput
                             value={name}
                             onChangeText={this.handlenameField}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
 
