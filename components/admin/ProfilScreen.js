@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import {StyleSheet, Text, TextInput, View,Button,Alert,ScrollView} from 'react-native';
+import {StyleSheet, Text, TextInput, View,Button,Alert, ScrollView,Platform} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
@@ -25,8 +25,7 @@ export default class ProfilScreen extends React.Component {
         linkedInUrl:'',
         facebookUrl:'',
         instagram:'',
-        error:true,
-        response:{}
+        error:true
     }
 
     /*Håndter alle ændringer af felter*/
@@ -51,59 +50,46 @@ export default class ProfilScreen extends React.Component {
     componentDidMount() {
         this.getCurrentUserAttributes()
     }
-    async getOwnAttributes (MyFireBaseId){
-        this.setState({response:''})
-
-        var allUsers =[]
-       await firebase
-            .database()
-            .ref('/UserAttributes')
-            .once('value', snapshot => {
-                allUsers.push(snapshot.val());
-
-                var allUserAttributes = []
-
-                console.log(allUsers)
-                let push = true;
-                /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                allUsers.map((user_item, index) => {
-                    var item_vals = Object.values(user_item)
-                    item_vals.map((item_val, index) => {
-                        if (item_val.id === MyFireBaseId) {
-                            if(push){
-                                let myAttributeKey = Object.keys(user_item);
-                                this.setState({unique_attribute_id:myAttributeKey})
-
-                                push = false
-                            }
-                            allUserAttributes.push(item_val)
-                        }
-                    });
-                });
-
-                var objAllUserAttributes = {}
-
-                Object.assign(objAllUserAttributes, allUserAttributes);
-                console.log("Mine attributter2",objAllUserAttributes)
-
-                this.setState({response: objAllUserAttributes})
-
-            });
-    }
 
 
     getCurrentUserAttributes = async () =>{
         try {
-            let myAttributes = [];
             /*Kald denne metode for at tjek info på opgivet brugere*/
-             await this.getOwnAttributes(firebase.auth().currentUser.uid)
+            var allUsers=[];
+             await firebase
+                 .database()
+                 .ref('/UserAttributes/')
+                 .on('value', snapshot => {
 
+                     allUsers.push(snapshot.val());
 
-          await console.log("test",this.state.response)
+                     var allUserAttributes = []
+                     var your_userAttribute_id = ''
+                     var push = true;
+                     /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
+                     allUsers.map((user_item, index) => {
+                         var item_vals = Object.values(user_item)
+                         /*Inner loop for at se om ID er samme som opgivet*/
+                         item_vals.map((item_val, index) => {
+                             if (item_val.id === firebase.auth().currentUser.uid) {
+                                 /*Kun en gang push Tabel ID*/
+                                 if(push){
+                                     your_userAttribute_id = Object.keys(user_item)
+                                     this.setState({unique_attribute_id:your_userAttribute_id})
+                                     push = false;
+                                 }
+                                 allUserAttributes.push(item_val)
+                             }
+                         });
+                     });
 
-            const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state.response[0]
-            this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
-            console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
+                     var objAllUserAttributes = {}
+                     if(your_userAttribute_id){
+                         Object.assign(objAllUserAttributes, allUserAttributes);
+                         const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
+                         this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                     }
+                  });
         }catch (e) {
             console.log("Fejl!! \n",e)
         }
@@ -112,7 +98,7 @@ export default class ProfilScreen extends React.Component {
 
     /*Gem brugerprofil*/
     saveProfile = async () =>{
-        var {id,name,email,password,address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state
+        var {id,name,email,password,address, jobTitle, company, linkedInUrl, facebookUrl, instagram,unique_attribute_id} = this.state
         var currentEmail = firebase.auth().currentUser.email;
         var newEmail = email
         var currentPassword = password
@@ -126,11 +112,10 @@ export default class ProfilScreen extends React.Component {
                  }).catch((error) => { console.log("Fejl i password \n",error); });
              }).catch((error) => { console.log(error); });
          }
-        try {
-             var myAttributes=[]
-            myAttributes.push(this.state.response[0])
 
-            if(!myAttributes){
+
+        try {
+            if(!unique_attribute_id){
                 console.log("hvis der ikke er data")
                 const reference = firebase
                     .database()
@@ -138,29 +123,30 @@ export default class ProfilScreen extends React.Component {
                     .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
 
             }else {
-                console.log("hvis der er data",myAttributes)
+                console.log("Der er data")
                 try {
-
-                    const {unique_attribute_id }= this.state
-
-                    await firebase
+                     await firebase
                         .database()
-                        .ref('/UserAttributes/' + unique_attribute_id)
+                        .ref('/UserAttributes/'+unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret
                         .update({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
                     // Når bilen er ændret, går vi tilbage.
-                    Alert.alert("Din info er nu opdateret");
+                    if(Platform.OS != "web"){
+                        Alert.alert("Din info er nu opdateret");
+                    }else {
+                        alert("Dine info er nu opdateret")
+                    }
                 } catch (error) {
                    console.log("Mine fejl",error)
                 }
             }
         } catch (error) {
-            Alert.alert(`Error: ${error.message}`);
+            console.log(error)
         }
     }
 
     render() {
-        const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password } = this.state;
+        const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password,unique_attribute_id } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
                 <ScrollView>

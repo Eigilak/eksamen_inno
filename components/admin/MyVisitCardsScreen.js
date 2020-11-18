@@ -20,7 +20,7 @@ const DATA = [
     address: "Addresse",
     company: "Virk",
     facebookUrl: "Facebook",
-    id: "0001",
+    id: "0002",
     instagram: "https://www.instagram.com/nadiadejgaard/",
     jobTitle: "Top Model",
     linkedInUrl: "https://www.linkedin.com/in/nadia-dejgaard-05056217a/",

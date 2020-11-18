@@ -16,7 +16,7 @@ import GlobalStyles from "../modules/GlobalStyle";
 
 export default class loginScreen extends React.Component {
     state = {
-        email: 'e@e.dk',
+        email: 'admin@admin.dk',
         password: '123456',
         isLoading: false,
         isCompleted: false,
