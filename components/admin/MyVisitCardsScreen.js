@@ -5,29 +5,6 @@ import GlobalStyles from "../modules/GlobalStyle";
 import VisitCardItems from "./items/VisitCardItems";
 import TitleModule from "../modules/TitleModule.js";
 
-const DATA = [
-  {
-    address: "Addresse",
-    company: "Virk",
-    facebookUrl: "Facebook",
-    id: "0001",
-    instagram: "https://www.instagram.com/lassthecreator/",
-    jobTitle: "Pro Gamer",
-    linkedInUrl: "https://www.linkedin.com/in/lasse-skovgaard-larsen-75b10216b/",
-    name: "Lasse S. Larsen"
-  },
-  {
-    address: "Addresse",
-    company: "Virk",
-    facebookUrl: "Facebook",
-    id: "0002",
-    instagram: "https://www.instagram.com/nadiadejgaard/",
-    jobTitle: "Top Model",
-    linkedInUrl: "https://www.linkedin.com/in/nadia-dejgaard-05056217a/",
-    name: "Nadia Dejgaard Nielsen"
-  }
-];
-
 export default class MyVisitCardsScreen extends React.Component {
     state={
         visitCards:[]
