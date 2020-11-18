@@ -21,15 +21,7 @@ export default class MyVisitCardsScreen extends React.Component {
                 jobTitle: "titel",
                 linkedInUrl: "linkedin",
                 name: "Navn"},
-            {address: "Addresse2",
-                company: "Virk2",
-                facebookUrl: "facebook",
-                id: "osd4VTO7vPhCIajcRpqrIBDwH9z2",
-                instagram: "insta",
-                jobTitle: "titel",
-                linkedInUrl: "linkedin",
-                name: "Navn"},
-        ]
+        ];
 
         //Lav en konstant kaldt render VisitCard som tager en parametre med til vores VisitCardItem kompnent
         const renderspoof_visitkortItem = ({item}) =>(
