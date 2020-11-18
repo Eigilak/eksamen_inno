@@ -7,7 +7,8 @@ export default class VisitCardItems extends React.Component{
     const{VisitCardName} = this.props
     return(
       <View>
-        <Text>" {VisitCardName.name}"</Text>
+        <Text> "{VisitCardName.name}"</Text>
+        <Text> "{VisitCardName.linkedInUrl}"</Text>
       </View>
 
       /*<CardTwo
