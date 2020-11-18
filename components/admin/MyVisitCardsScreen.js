@@ -30,6 +30,10 @@ export default class MyVisitCardsScreen extends React.Component {
 
         return(
             <View style={GlobalStyles.mainContainer}>
+                <Button
+                    title={"Opret visitkort"}
+                    onPress={() => {this.props.navigation.navigate('CreateVisitCard')}}
+                />
             </View>
         )
     }
