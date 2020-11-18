@@ -28,7 +28,7 @@ export default class CreateVisitCardScreen extends React.Component {
 
             handleSave = () => {
                 const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name } = this.state;
-
+                const {navigation} = this.props;
                 try {
 
                   const reference = firebase
@@ -46,15 +46,19 @@ export default class CreateVisitCardScreen extends React.Component {
                      instagram: '',
                    jobTitle:'',
                    linkedInUrl: '',
+
                   });
+                    navigation.goBack();
+
                 } catch (error) {
                  Alert.alert(`Error: ${error.message}`);
                 }
+
               };
 
 
     render() {
-        const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl} = this.state;
+        const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
         return(
             <SafeAreaView style={GlobalStyles.mainContainer}>
                 <ScrollView>
@@ -108,9 +112,10 @@ export default class CreateVisitCardScreen extends React.Component {
                         />
                     </View>
 
+                <Button title="Gem visitkort" onPress={this.handleSave}
 
+                />
 
-                <Button title="Gem visitkort" onPress={this.handleSave} />
 
 
              </ScrollView>
