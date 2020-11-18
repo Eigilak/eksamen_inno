@@ -100,10 +100,18 @@ export default class CreateVisitCardScreen extends React.Component {
                             onChangeText={this.handleLinkedInUrlField}
                             />
                              </View>
+                    <View>
+                        <Text >Navn:</Text>
+                        <TextInput
+                            value={name}
+                            onChangeText={this.handlenameField}
+                        />
+                    </View>
 
 
 
                 <Button title="Gem visitkort" onPress={this.handleSave} />
+
 
              </ScrollView>
             </SafeAreaView>
