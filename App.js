@@ -15,7 +15,7 @@ import CreateVisitCardScreen from "./components/admin/CreateVisitCardScreen";
 import MyVisitCardsScreen from "./components/admin/MyVisitCardsScreen";
 import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScreen";
 import ProfilScreen from "./components/admin/ProfilScreen";
-
+import EditMyVisitCardItem from "./components/admin/items/EditMyVisitCardItem";
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
   LogBox.ignoreAllLogs(true)
@@ -112,6 +112,16 @@ const AdminStackNavigation = createStackNavigator({
       ),
       headerShown:false
     }
+  },
+  EditMyVisitCard:{
+    screen:EditMyVisitCardItem,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="dashboard" size={24} color={tintColor} />
+      ),
+      headerShown:true
+    }
+
   }
 
 

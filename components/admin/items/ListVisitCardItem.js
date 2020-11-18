@@ -9,45 +9,61 @@ let screenHeight = Dimensions.get("window").height;
 
 
 export default class ListVisitCardItem extends React.Component{
+
+
+    handlePress = () => {
+        // Her pakker vi ting ud fra props
+        const {id, onSelect} = this.props
+        // Kalder den onSelect prop vi får, med det ID vi har fået som argument.
+        onSelect(id)
+    };
+
     render() {
         const{VisitCardItem} = this.props
 
+
+
         return(
-            <View style={styles.mainContainer}>
-                <View style={styles.cardImgContainer}>
-                    <Image
-                        source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
-                        style={styles.cardImage}
-                    />
-                </View>
-                <View style={styles.textContainer}>
-                    <View style={styles.textInnerContainer}>
-                        <View style={styles.profileImageContainer}>
-                            <Image
-                                source={require('../../../assets/visitCard/VisitCard_Profile.png')}
-                                style={styles.profileImage}
-                            />
-                        </View>
-                        <View styles={styles.visitCardTextContainer}>
-                            <Text style={styles.visitcardText}>Navn: {VisitCardItem.name}</Text>
-                            <Text style={styles.visitcardText}>Jobtitel: {VisitCardItem.jobTitle}</Text>
-                            <Text style={styles.visitcardText}>Virksomhed: {VisitCardItem.company}</Text>
-                        </View>
-                        <View
-                            style={ styles.icons}
-                        >{/*
-                            {VisitCardItem.linkedInUrl ? (
-                            <TouchableOpacity onPress={() => Linking.openURL(VisitCardItem.linkedInUrl)}>
-                                <AntDesign name="linkedin-square" size={24} color="black" />
-                            </TouchableOpacity>
-                        ) : null}*/}
-                        </View>
+            <TouchableOpacity onPress={this.handlePress}>
+                <View style={styles.mainContainer}>
+                    <View style={styles.cardImgContainer}>
+                        <Image
+                            source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
+                            style={styles.cardImage}
+                        />
                     </View>
+                    <View style={styles.textContainer}>
+                        <View style={styles.textInnerContainer}>
+                            <View style={styles.profileImageContainer}>
+                                <Image
+                                    source={require('../../../assets/visitCard/VisitCard_Profile.png')}
+                                    style={styles.profileImage}
+                                />
+                            </View>
+                            <View styles={styles.visitCardTextContainer}>
+                                <Text style={styles.visitcardText}>Navn: {VisitCardItem.name}</Text>
+                                <Text style={styles.visitcardText}>Jobtitel: {VisitCardItem.jobTitle}</Text>
+                                <Text style={styles.visitcardText}>Virksomhed: {VisitCardItem.company}</Text>
+                            </View>
+                            <View
+                                style={ styles.icons}
+                            >
+                            { VisitCardItem.linkedInUrl
+                                ? (
+                                <TouchableOpacity onPress={() => Linking.openURL(VisitCardItem.linkedInUrl)}>
+                                    <AntDesign name="linkedin-square" style={styles.icons} color="black" />
+                                    <Text>{VisitCardItem.linkedInUrl}</Text>
+                                </TouchableOpacity>
+                                 )
+                                : null}
+                            </View>
+                        </View>
 
 
 
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 }
