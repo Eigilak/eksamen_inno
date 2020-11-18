@@ -183,15 +183,6 @@ export default class App extends React.Component{
     });
   }
 
-
-  /*Sørg for at states bliver nulsat efter de er blevet bvrugt*/
-  componentWillUnmount() {
-    // fix Warning: Can't perform a React state update on an unmounted component
-    this.setState = (state,callback)=>{
-      return;
-    };
-  }
-
   /*Render afhængig om jeg er logget ind*/
   render() {
     const {user} = this.state;

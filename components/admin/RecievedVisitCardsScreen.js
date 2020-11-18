@@ -2,7 +2,7 @@ import firebase from "firebase";
 import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-import NewVisitCardItem from "./items/NewVisitCardItem";
+import ListVisitCardItem from "./items/NewVisitCardItem";
 import VisitCardItem from "./items/VisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
 
@@ -53,7 +53,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
 
         const renderCardItem = ({item,index}) => {
             if (item.id !== firebase.auth().currentUser.uid) {
-                return  <NewVisitCardItem
+                return  <ListVisitCardItem
                     VisitCardItem={item}
                     id={ReceivedVisitCards[index]}
                 />
@@ -63,7 +63,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
         return(
             <View style={styles.container}>
                 {/* Title med styling*/ }
-                <TitleModule title = "Mine Visit Kort"/>
+                <TitleModule title = "Modtaget visitkort"/>
                 {/* FlatList komponent med title propertien og en værdi HANS*/ }
                 {visitCardsArray.length > 0 ?
 

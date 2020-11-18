@@ -123,13 +123,13 @@ export default class ProfilScreen extends React.Component {
                     .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
 
             }else {
-                console.log("Der er data")
                 try {
                      await firebase
                         .database()
                         .ref('/UserAttributes/'+unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret
                         .update({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
+                         this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
                     // Når bilen er ændret, går vi tilbage.
                     if(Platform.OS != "web"){
                         Alert.alert("Din info er nu opdateret");
@@ -149,7 +149,7 @@ export default class ProfilScreen extends React.Component {
         const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password,unique_attribute_id } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
-                <ScrollView>
+                <ScrollView style={GlobalStyles.createContainer}>
                     <TitleModule title={"Din profil"}/>
                     <View style={GlobalStyles.myInfoContainer}>
                         <Text> Oplysninger</Text>
