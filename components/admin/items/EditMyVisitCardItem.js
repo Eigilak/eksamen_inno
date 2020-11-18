@@ -20,7 +20,6 @@ export default class EditMyVisitCardItem extends React.Component {
     }
     componentDidMount() {
         const id = this.props.navigation.getParam('id');
-        console.log(id)
         this.getVisitCard(id)
     }
 
@@ -40,14 +39,14 @@ export default class EditMyVisitCardItem extends React.Component {
             });
 
     }
-/*
+
     handleAdressChange = text => this.setState({ address: text });
     handleCompanyChange = text => this.setState({ company: text });
     handlefacebookUrlChange = text => this.setState({ facebookUrl: text });
     handleInstagramChange = text => this.setState({ instagram: text });
     handleJobTitleChange = text => this.setState({ jobTitle: text });
     handleLinkedInUrlChange = text => this.setState({ linkedInUrl: text });
-    handlenameChange = text => this.setState({  name: text });*/
+    handlenameChange = text => this.setState({  name: text });
 
     updateTask = () =>  {
 
@@ -56,7 +55,7 @@ export default class EditMyVisitCardItem extends React.Component {
         const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name} = this.state;
 
         //henter id'et fra navigationen
-        const id = navigation.getParam(id);
+        const id = navigation.getParam('MMQ3rqvQdBWlbZiZZ8R');
 
         console.log('prøve '+address)
         try {
@@ -65,23 +64,23 @@ export default class EditMyVisitCardItem extends React.Component {
             Alert.alert("Dine informationer er nu opdateret :)");
             navigation.goBack();
         }catch (error) {
-            Alert.alert('Error: ${error.message}');
+            console.log(error)
         }
     }
 
 
 
     render() {
-        const {address, company, facebookUrl,name, instagram, jobTitle, linkedInUrl} = this.state;
+        const {address, company, facebookUrl, instagram, jobTitle,name, linkedInUrl} = this.state;
         return(
-            <Text>{name}</Text>
-           /* <SafeAreaView style={GlobalStyles.mainContainer}>
+            <SafeAreaView style={GlobalStyles.mainContainer}>
                 <ScrollView>
                     <View>
                         <Text >address</Text>
                         <TextInput
                             value={address}
                             onChangeText={this.handleAdressChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -89,6 +88,7 @@ export default class EditMyVisitCardItem extends React.Component {
                         <TextInput
                             value={company}
                             onChangeText={this.handleCompanyChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -96,6 +96,7 @@ export default class EditMyVisitCardItem extends React.Component {
                         <TextInput
                             value={facebookUrl}
                             onChangeText={this.handlefacebookUrlChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -103,6 +104,7 @@ export default class EditMyVisitCardItem extends React.Component {
                         <TextInput
                             value={instagram}
                             onChangeText={this.handleInstagramChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -110,6 +112,7 @@ export default class EditMyVisitCardItem extends React.Component {
                         <TextInput
                             value={jobTitle}
                             onChangeText={this.handleJobTitleChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -117,6 +120,7 @@ export default class EditMyVisitCardItem extends React.Component {
                         <TextInput
                             value={linkedInUrl}
                             onChangeText={this.handleLinkedInUrlChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
 
@@ -124,7 +128,8 @@ export default class EditMyVisitCardItem extends React.Component {
                         <Text >Navn:</Text>
                         <TextInput
                             value={name}
-                            onChangeText={this.handlenameChange()}
+                            onChangeText={this.handlenameChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
 
@@ -133,7 +138,7 @@ export default class EditMyVisitCardItem extends React.Component {
                     <Button title="Gem visitkort" onPress={this.updateTask} />
 
                 </ScrollView>
-            </SafeAreaView>*/
+            </SafeAreaView>
         );
     }
 }

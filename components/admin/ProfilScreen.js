@@ -198,7 +198,6 @@ export default class ProfilScreen extends React.Component {
                             <TextInput
                                 placeholder="facebook link"
                                 value={facebookUrl}
-                                keyboardType={url}
                                 onChangeText={this.handleChangeFacebookUrl}
                                 style={GlobalStyles.inputField}
                             />

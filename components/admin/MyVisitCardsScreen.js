@@ -49,8 +49,7 @@ export default class MyVisitCardsScreen extends React.Component {
     }
 
     handleSelectVisitCard = id => {
-        console.log(id)
-       /* this.props.navigation.navigate('EditMyVisitCard', { id });*/
+        this.props.navigation.navigate('EditMyVisitCard', { id });
     };
 
     /* Her oprettes et array der indeholder information om visitkort*/
@@ -65,7 +64,6 @@ export default class MyVisitCardsScreen extends React.Component {
         const visitCardsArray = Object.values(visitCards);
         // Vi skal også bruge alle IDer, så vi tager alle keys også.
         const visitCardsKeys = Object.keys(visitCards);
-        console.log(visitCardsKeys.length);
 
         /*render*/
         const renderCardItem = ({item,index}) => {
@@ -73,9 +71,10 @@ export default class MyVisitCardsScreen extends React.Component {
                 return(
                     <ListVisitCardItem
                         VisitCardItem={item}
-                        id={visitCards[index]}
+                        id={visitCardsKeys[index]}
                         onSelect={
-                            this.handleSelectVisitCard}
+                            this.handleSelectVisitCard
+                        }
                     />
                     )
 
