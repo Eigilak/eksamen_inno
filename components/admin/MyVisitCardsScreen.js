@@ -3,6 +3,7 @@ import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-nat
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import VisitCardItems from "./items/VisitCardItems";
+import TitleModule from "../modules/TitleModule.js";
 
 const DATA = [
   {
@@ -10,10 +11,20 @@ const DATA = [
     company: "Virk",
     facebookUrl: "Facebook",
     id: "0001",
+    instagram: "https://www.instagram.com/lassthecreator/",
+    jobTitle: "Pro Gamer",
+    linkedInUrl: "https://www.linkedin.com/in/lasse-skovgaard-larsen-75b10216b/",
+    name: "Lasse S. Larsen"
+  },
+  {
+    address: "Addresse",
+    company: "Virk",
+    facebookUrl: "Facebook",
+    id: "0001",
     instagram: "Insta",
-    jobTitle: "Titel",
+    jobTitle: "Titel2",
     linkedInUrl: "Linkedin",
-    name: "Navn"
+    name: "Navn2"
   }
 ];
 
@@ -36,7 +47,7 @@ export default class MyVisitCardsScreen extends React.Component {
       return(
         <View style={styles.container}>
           {/* Title med styling*/ }
-          <Text style={{ fontSize: 20, textAlign:'center',paddingTop:40 }}> 2. FlatList</Text>
+          <TitleModule title = "Mine Visit Kort"/>
           {/* FlatList komponent med title propertien og en værdi HANS*/ }
           <FlatList
             style={styles.inlineScroll}

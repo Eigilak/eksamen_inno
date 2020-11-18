@@ -1,5 +1,7 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import * as React from 'react';
+import Card1 from "./Cards";
+import {CardTwo} from "react-native-card-ui";
 //import GlobalStyles from ".../modules/GlobalStyle";
 
 export default class VisitCardItems extends React.Component{
@@ -7,13 +9,11 @@ export default class VisitCardItems extends React.Component{
     const{VisitCardName} = this.props
     return(
       <View>
-        <Text> "{VisitCardName.name}"</Text>
-        <Text> "{VisitCardName.linkedInUrl}"</Text>
-      </View>
-
-      /*<CardTwo
+      <Card1
         title={VisitCardName.name}
-        subTitle={"Devlopper"}
+        subTitle={VisitCardName.jobTitle}
+        subTitle2={VisitCardName.company}
+
         profile={{
           uri:
             "http://www.annonce-musicien.fr/assets/user_xl-e4e8b0bbfd2332dce41ff66644dd16f2.png"
@@ -22,9 +22,14 @@ export default class VisitCardItems extends React.Component{
           uri:
             "https://www.gettyimages.com/gi-resources/images/frontdoor/creative/PanoramicImagesRM/FD_image.jpg"
         }}
-        icon={"apple"}
-        iconColor={"red"}
-      />*/
+        icon={"linkedin-square"}
+        iconColor={"blue"}
+        iconlink={VisitCardName.linkedInUrl}
+        icon2={"instagram"}
+        iconColor2={"black"}
+        iconlink2={VisitCardName.instagram}
+      />
+      </View>
     )
   }
 }
