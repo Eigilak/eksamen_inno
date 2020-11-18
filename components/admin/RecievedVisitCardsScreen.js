@@ -2,8 +2,7 @@ import firebase from "firebase";
 import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-import ListVisitCardItem from "./items/NewVisitCardItem";
-import VisitCardItem from "./items/VisitCardItem";
+import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
 
 export default class RecievedVisitCardsScreen extends React.Component {

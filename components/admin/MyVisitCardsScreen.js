@@ -3,7 +3,6 @@ import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-nat
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import ListVisitCardItem from "./items/ListVisitCardItem";
-import VisitCardItem from "./items/VisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
 
 export default class MyVisitCardsScreen extends React.Component {
@@ -49,6 +48,11 @@ export default class MyVisitCardsScreen extends React.Component {
 
     }
 
+    handleSelectVisitCard = id => {
+        console.log(id)
+       /* this.props.navigation.navigate('EditMyVisitCard', { id });*/
+    };
+
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
         const { visitCards,loading,premium_max } = this.state;
@@ -66,10 +70,15 @@ export default class MyVisitCardsScreen extends React.Component {
         /*render*/
         const renderCardItem = ({item,index}) => {
             if (item.id === firebase.auth().currentUser.uid) {
-                return  <ListVisitCardItem
-                    VisitCardItem={item}
-                    id={visitCards[index]}
-                />
+                return(
+                    <ListVisitCardItem
+                        VisitCardItem={item}
+                        id={visitCards[index]}
+                        onSelect={
+                            this.handleSelectVisitCard}
+                    />
+                    )
+
             }
         };
 

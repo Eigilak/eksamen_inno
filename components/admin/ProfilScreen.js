@@ -51,6 +51,15 @@ export default class ProfilScreen extends React.Component {
         this.getCurrentUserAttributes()
     }
 
+    isValidUrl=(string)=>{
+        try {
+            new URL(string);
+        } catch (e) {
+            return false;
+        }
+
+        return true;
+    }
 
     getCurrentUserAttributes = async () =>{
         try {
@@ -112,7 +121,9 @@ export default class ProfilScreen extends React.Component {
                  }).catch((error) => { console.log("Fejl i password \n",error); });
              }).catch((error) => { console.log(error); });
          }
-
+         if(!this.isValidUrl(linkedInUrl)){
+             Alert.alert('Vi tager kun imod URL')
+         }
 
         try {
             if(!unique_attribute_id){
@@ -155,7 +166,7 @@ export default class ProfilScreen extends React.Component {
                         <Text> Oplysninger</Text>
                         <View style={GlobalStyles.myInfoRightContainer}>
                             <TextInput
-                                placeholder="email"
+                                placeholder="email@email.dk"
                                 value={email}
                                 onChangeText={this.handleChangeEmail}
                                 style={GlobalStyles.inputField}
@@ -187,6 +198,7 @@ export default class ProfilScreen extends React.Component {
                             <TextInput
                                 placeholder="facebook link"
                                 value={facebookUrl}
+                                keyboardType={url}
                                 onChangeText={this.handleChangeFacebookUrl}
                                 style={GlobalStyles.inputField}
                             />
