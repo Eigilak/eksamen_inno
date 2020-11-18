@@ -16,6 +16,7 @@ export default class ProfilScreen extends React.Component {
         id:firebase.auth().currentUser.uid,
         user:firebase.auth().currentUser,
         email:firebase.auth().currentUser.email,
+        unique_attribute_id:'',
         password:'',
         name:'',
         address:'',
@@ -67,9 +68,14 @@ export default class ProfilScreen extends React.Component {
                 /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
                 allUsers.map((user_item, index) => {
                     var item_vals = Object.values(user_item)
-
                     item_vals.map((item_val, index) => {
                         if (item_val.id === MyFireBaseId) {
+                            if(push){
+                                let myAttributeKey = Object.keys(user_item);
+                                this.setState({unique_attribute_id:myAttributeKey})
+
+                                push = false
+                            }
                             allUserAttributes.push(item_val)
                         }
                     });
@@ -92,8 +98,12 @@ export default class ProfilScreen extends React.Component {
             /*Kald denne metode for at tjek info på opgivet brugere*/
              await this.getOwnAttributes(firebase.auth().currentUser.uid)
 
+
+          await console.log("test",this.state.response)
+
             const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = this.state.response[0]
             this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+            console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
         }catch (e) {
             console.log("Fejl!! \n",e)
         }
@@ -131,15 +141,11 @@ export default class ProfilScreen extends React.Component {
                 console.log("hvis der er data",myAttributes)
                 try {
 
-                    myAttributes.map((attribute, index) => {
-                        attribute.id
-                        var item_vals = Object.values(attribute)
-                        console.log(item_vals)
-                    });
+                    const {unique_attribute_id }= this.state
 
                     await firebase
                         .database()
-                        .ref('/UserAttributes/' + id)
+                        .ref('/UserAttributes/' + unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret
                         .update({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
                     // Når bilen er ændret, går vi tilbage.
