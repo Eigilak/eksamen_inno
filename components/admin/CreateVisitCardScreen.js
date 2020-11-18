@@ -66,7 +66,6 @@ export default class CreateVisitCardScreen extends React.Component {
 
     render() {
         const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
-        const {navigation} = this.props;
         return(
             <SafeAreaView style={GlobalStyles.mainContainer}>
                 <ScrollView>
@@ -124,9 +123,6 @@ export default class CreateVisitCardScreen extends React.Component {
                 <Button title="Gå tilbage" onPress={this.handleBack}
 
                 />
-
-
-
              </ScrollView>
             </SafeAreaView>
         );
