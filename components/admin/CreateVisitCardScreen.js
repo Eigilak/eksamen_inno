@@ -108,8 +108,6 @@ export default class CreateVisitCardScreen extends React.Component {
     handleBack = () => {
         const {navigation} = this.props;
         navigation.goBack()
-
-
     }
 
 

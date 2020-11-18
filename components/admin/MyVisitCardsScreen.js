@@ -29,10 +29,50 @@ const DATA = [
 ];
 
 export default class MyVisitCardsScreen extends React.Component {
-    constructor() {
-        super();
+    state={
+        visitCards:[]
     }
-    navigateCreate = () => {
+
+    componentDidMount() {
+        this.getYourVisitCards()
+    }
+
+    /*Hent mine opgivet informationer fra ProfilScreen*/
+    getYourVisitCards = async () =>{
+        try {
+            /*Kald denne metode for at tjek info på opgivet brugere*/
+            var allVisitCards=[];
+            await firebase
+                .database()
+                .ref('/visitkort')
+                .on('value', snapshot => {
+
+                    allVisitCards.push(snapshot.val());
+                    console.log(snapshot.val())
+
+                    var cleanedVisitCards = []
+                    /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
+                    allVisitCards.map((visit_cardItem, index) => {
+                        var item_vals = Object.values(visit_cardItem)
+                        /*Inner loop for at se om ID er samme som opgivet*/
+                        item_vals.map((item_val, index) => {
+                            if (item_val.id === firebase.auth().currentUser.uid) {
+                                /*Kun en gang push Tabel ID med dit eget ID*/
+                                cleanedVisitCards.push(item_val)
+                            }
+                        });
+                    });
+
+                    console.log("Mine visitkort",cleanedVisitCards);
+
+
+                    this.setState({visitCards:cleanedVisitCards})
+
+                });
+        }catch (e) {
+            console.log("Fejl!! \n",e)
+        }
+
     }
 
     /* Her oprettes et array der indeholder information om visitkort*/
@@ -42,6 +82,7 @@ export default class MyVisitCardsScreen extends React.Component {
         <VisitCardItems VisitCardName={item}/>
       )
 
+        const {visitCards} = this.state;
       return(
         <View style={styles.container}>
           {/* Title med styling*/ }
@@ -49,9 +90,9 @@ export default class MyVisitCardsScreen extends React.Component {
           {/* FlatList komponent med title propertien og en værdi HANS*/ }
           <FlatList
             style={styles.inlineScroll}
-            data={DATA}
+            data={visitCards}
             renderItem={renderCarBrandItem}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => visitCards[index]}
 
           />
             <Button
