@@ -1,23 +1,7 @@
 import firebase from "firebase";
-import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View,Button } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-import VisitCardItems from "./items/VisitCardItems";
-
-const DATA = [
-  {
-    address: "Addresse",
-    company: "Virk",
-    facebookUrl: "Facebook",
-    id: "0001",
-    instagram: "Insta",
-    jobTitle: "Titel",
-    linkedInUrl: "Linkedin",
-    name: "Navn"
-  }
-];
-
-
 
 export default class MyVisitCardsScreen extends React.Component {
     constructor() {
@@ -28,40 +12,35 @@ export default class MyVisitCardsScreen extends React.Component {
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-      //Lav en konstant kaldt render Carbrands som tager en parametre med til vores CarbrandItem kompnent
-      const renderCarBrandItem = ({item}) =>(
-        <VisitCardItems VisitCardName={item}/>
-      )
+        const spoof_visitkort = [
+            {address: "Addresse",
+                company: "Virk",
+                facebookUrl: "facebook",
+                id: "osd4VTO7vPhCIajcRpqrIBDwH9z2",
+                instagram: "insta",
+                jobTitle: "titel",
+                linkedInUrl: "linkedin",
+                name: "Navn"},
+        ];
 
-      return(
-        <View style={styles.container}>
-          {/* Title med styling*/ }
-          <Text style={{ fontSize: 20, textAlign:'center',paddingTop:40 }}> 2. FlatList</Text>
-          {/* FlatList komponent med title propertien og en værdi HANS*/ }
-          <FlatList
-            style={styles.inlineScroll}
-            data={DATA}
-            renderItem={renderCarBrandItem}
-            keyExtractor={item => item.id}
-          />
+        //Lav en konstant kaldt render VisitCard som tager en parametre med til vores VisitCardItem kompnent
+        const renderspoof_visitkortItem = ({item}) =>(
+            <VisitCardItem VisitCardName={item}/>
+        )
 
-        </View>
-
-      )
+        return(
+            <View style={GlobalStyles.mainContainer}>
+                <Button
+                    title={"Opret visitkort"}
+                    onPress={() => {this.props.navigation.navigate('CreateVisitCard')}}
+                />
+            </View>
+        )
     }
-
 }
 
 const styles = StyleSheet.create({
-  inlineScroll:{
-    height: 100
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
+    inlineScroll:{
+        height: 100
+    },
 });
-
-

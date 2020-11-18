@@ -49,35 +49,47 @@ export default class ProfilScreen extends React.Component {
     componentDidMount() {
         this.getCurrentUserAttributes()
     }
+    getOwnAttributes = (allUsers,MyFireBaseId) =>{
+
+        var allUsers =[]
+        firebase
+            .database()
+            .ref('/UserAttributes')
+            .once('value', snapshot => {
+                allUsers.push(snapshot.val());
+
+                var allUserAttributes = []
+
+                console.log(allUserAttributes)
+
+                /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
+                allUsers.map((user_item, index) => {
+                    var item_vals = Object.values(user_item)
+                    item_vals.map((item_val, index) => {
+                        if (item_val.id === MyFireBaseId) {
+                            allUserAttributes.push(item_val)
+                        }
+                    });
+                });
+                var objAllUserAttributes = {}
+                Object.assign(objAllUserAttributes, allUserAttributes);
+
+                return objAllUserAttributes
+            });
+    }
+
 
     getCurrentUserAttributes = () =>{
         try {
-            var allUsers =[]
-            firebase
-                .database()
-                .ref('/UserAttributes')
-                .once('value', snapshot => {
-                    allUsers.push(snapshot.val());
-                    var allUserAttributes=[]
-                    /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                    allUsers.map((user_item,index) => {
-                        var item_vals = Object.values(user_item)
-                        item_vals.map((item_val,index)=>{
-                            if(item_val.id === firebase.auth().currentUser.uid){
-                                allUserAttributes.push(item_val)
-                            }
-                        });
-                    });
-                    var objAllUserAttributes={}
-                    Object.assign(objAllUserAttributes, allUserAttributes);
 
-                    console.log(allUserAttributes)
+            /*Kald denne metode for at tjek info på opgivet brugere*/
+            var myAttributes = this.getOwnAttributeID(allUsers,firebase.auth().currentUser.uid)
 
-                    const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
-                    this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
-                    console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
+            const { name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = myAttributes[0]
+            this.setState({ name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+            console.log(name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram)
 
-                });
+
         }catch (e) {
             console.log("Fejl!! \n",e)
         }
@@ -104,15 +116,19 @@ export default class ProfilScreen extends React.Component {
 
             firebase
                 .database()
-                .ref('/UserAttributes')
+                .ref('/UserAttributes/')
                 .on('value', snapshot => {
                     allUsers = snapshot.val()
                 });
 
             if(!allUsers){
+
+
+
+
                 const reference = firebase
                     .database()
-                    .ref('/UserAttributes')
+                    .ref('/UserAttributes/'+myAttributeId)
                     .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
                 if(Platform.OS !== "web"){
                     Alert.alert(`Gemt`);
