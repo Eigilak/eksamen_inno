@@ -52,7 +52,13 @@ export default class MyVisitCardsScreen extends React.Component {
             data={DATA}
             renderItem={renderCarBrandItem}
             keyExtractor={item => item.id}
+
           />
+            <Button
+                title={"Opret visitkort"}
+                onPress={() => {this.props.navigation.navigate('CreateVisitCard')}}
+            />
+
 
         </View>
 
