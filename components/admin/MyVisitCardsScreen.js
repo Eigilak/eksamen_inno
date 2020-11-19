@@ -76,7 +76,7 @@ export default class MyVisitCardsScreen extends React.Component {
                             this.handleSelectVisitCard
                         }
                     />
-                    )
+                )
 
             }
         };
@@ -87,7 +87,7 @@ export default class MyVisitCardsScreen extends React.Component {
                     <TitleModule title = "Loading....."/>
                 </View>
 
-                )
+            )
         }else{
             return (
                 <View style={styles.container}>
@@ -119,15 +119,13 @@ export default class MyVisitCardsScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  inlineScroll:{
-    height: 100
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
+    inlineScroll:{
+        height: 100
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 });
-
-
