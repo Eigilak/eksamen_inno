@@ -16,6 +16,8 @@ import MyVisitCardsScreen from "./components/admin/MyVisitCardsScreen";
 import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScreen";
 import ProfilScreen from "./components/admin/ProfilScreen";
 import EditMyVisitCardItem from "./components/admin/items/EditMyVisitCardItem";
+import SeeRecievedVisitCardItem from "./components/admin/items/SeeRecievedVisitCardItem";
+
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
   LogBox.ignoreAllLogs(true)
@@ -121,7 +123,15 @@ const AdminStackNavigation = createStackNavigator({
       ),
       headerShown:true
     }
-
+  },
+  SeeRecievedVisitCard:{
+    screen:SeeRecievedVisitCardItem,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="dashboard" size={24} color={tintColor} />
+      ),
+      headerShown:true
+    }
   }
 
 
