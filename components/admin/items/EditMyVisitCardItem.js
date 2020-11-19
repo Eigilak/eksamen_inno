@@ -55,13 +55,18 @@ export default class EditMyVisitCardItem extends React.Component {
         const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name} = this.state;
 
         //henter id'et fra navigationen
-        const id = navigation.getParam('MMQ3rqvQdBWlbZiZZ8R');
+        const id = this.props.navigation.getParam('id');
 
-        console.log('prøve '+address)
+        console.log(id)
+
         try {
             //her opdateres KUN de felter, som vi har sagt må opdateres. (update > push)
-            firebase.database().ref('/visitkort/'+id).update({address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name});
+            firebase
+                .database()
+                .ref('/visitkort/'+id)
+                .update({address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name});
             Alert.alert("Dine informationer er nu opdateret :)");
+
             navigation.goBack();
         }catch (error) {
             console.log(error)
