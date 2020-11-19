@@ -21,8 +21,6 @@ export default class ListVisitCardItem extends React.Component{
     render() {
         const{VisitCardItem} = this.props
 
-
-
         return(
             <TouchableOpacity onPress={this.handlePress}>
                 <View style={styles.mainContainer}>
