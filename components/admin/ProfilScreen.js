@@ -69,34 +69,35 @@ export default class ProfilScreen extends React.Component {
                  .database()
                  .ref('/UserAttributes/')
                  .on('value', snapshot => {
+                     if(snapshot.val()){
+                         allUsers.push(snapshot.val());
 
-                     allUsers.push(snapshot.val());
-
-                     var allUserAttributes = []
-                     var your_userAttribute_id = ''
-                     var push = true;
-                     /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                     allUsers.map((user_item, index) => {
-                         var item_vals = Object.values(user_item)
-                         /*Inner loop for at se om ID er samme som opgivet*/
-                         item_vals.map((item_val, index) => {
-                             if (item_val.id === firebase.auth().currentUser.uid) {
-                                 /*Kun en gang push Tabel ID*/
-                                 if(push){
-                                     your_userAttribute_id = Object.keys(user_item)
-                                     this.setState({unique_attribute_id:your_userAttribute_id})
-                                     push = false;
+                         var allUserAttributes = []
+                         var your_userAttribute_id = ''
+                         var push = true;
+                         /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
+                         allUsers.map((user_item, index) => {
+                             var item_vals = Object.values(user_item)
+                             /*Inner loop for at se om ID er samme som opgivet*/
+                             item_vals.map((item_val, index) => {
+                                 if (item_val.id === firebase.auth().currentUser.uid) {
+                                     /*Kun en gang push Tabel ID*/
+                                     if(push){
+                                         your_userAttribute_id = Object.keys(user_item)
+                                         this.setState({unique_attribute_id:your_userAttribute_id})
+                                         push = false;
+                                     }
+                                     allUserAttributes.push(item_val)
                                  }
-                                 allUserAttributes.push(item_val)
-                             }
+                             });
                          });
-                     });
 
-                     var objAllUserAttributes = {}
-                     if(your_userAttribute_id){
-                         Object.assign(objAllUserAttributes, allUserAttributes);
-                         const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
-                         this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                         var objAllUserAttributes = {}
+                         if(your_userAttribute_id){
+                             Object.assign(objAllUserAttributes, allUserAttributes);
+                             const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
+                             this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                         }
                      }
                   });
         }catch (e) {
