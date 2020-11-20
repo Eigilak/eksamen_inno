@@ -18,7 +18,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
     componentDidMount() {
         this.getRecievedCards();
     }
-
+    /*Test af Master*/
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getRecievedCards = async () =>{
 
