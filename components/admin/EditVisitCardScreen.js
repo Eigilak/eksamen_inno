@@ -1,9 +1,20 @@
 import firebase from "firebase";
-import {Button, StyleSheet, Text, View,ScrollView,SafeAreaView, Alert, TextInput} from 'react-native';
+import {
+    Alert,
+    Button,
+    Linking,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-
-
+import ListVisitCardSpoofItem from "./items/ListVisitCardSpoofItem";
+import {AntDesign} from "@expo/vector-icons";
 
 export default class EditVisitCardScreen extends React.Component {
 
@@ -17,6 +28,7 @@ export default class EditVisitCardScreen extends React.Component {
         jobTitle:'',
         linkedInUrl: '',
         name:'',
+        email:''
 
 
     }
@@ -33,6 +45,7 @@ export default class EditVisitCardScreen extends React.Component {
             .once( 'value', dataObject => {
                 //her hentes opgaven fra databasen
                 const visitCard = dataObject.val();
+                this.setState({visitCard})
                 //her deles de forskellige værdier op
                 const { address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name} = visitCard;
                 //her sættes staten så f.eks. opgavens titel er loadet når man går ind på siden
@@ -50,6 +63,7 @@ export default class EditVisitCardScreen extends React.Component {
     handleLinkedInUrlChange = text => this.setState({ linkedInUrl: text });
     handlenameChange = text => this.setState({  name: text });
 
+
     updateTask = () =>  {
 
         const {navigation} = this.props;
@@ -57,31 +71,48 @@ export default class EditVisitCardScreen extends React.Component {
         const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name} = this.state;
 
         //henter id'et fra navigationen
-        const id = navigation.getParam('MMQ3rqvQdBWlbZiZZ8R');
+        const id = this.props.navigation.getParam('id');
 
-        console.log('prøve '+address)
         try {
             //her opdateres KUN de felter, som vi har sagt må opdateres. (update > push)
-            firebase.database().ref('/visitkort/'+id).update({address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name});
+            firebase
+                .database()
+                .ref('/visitkort/'+id)
+                .update({address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name});
             Alert.alert("Dine informationer er nu opdateret :)");
+
             navigation.goBack();
         }catch (error) {
-            Alert.alert('Error: ${error.message}');
+            console.log(error)
         }
     }
 
 
 
     render() {
-        const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl} = this.state;
+        const {email,address, company, facebookUrl, instagram, jobTitle,name, linkedInUrl,visitCard} = this.state;
+
+        let props ={
+            email,address, company, facebookUrl, instagram, jobTitle,name, linkedInUrl
+        }
         return(
-            <SafeAreaView style={GlobalStyles.mainContainer}>
-                <ScrollView>
-                    <View>
+            <View style={{paddingTop:30}}>
+                <Text style={{textAlign:"right", paddingHorizontal:20,}}>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <AntDesign name="closecircle" size={25} color="#0a66c2" />
+                    </TouchableOpacity>
+                </Text>
+
+                <ListVisitCardSpoofItem
+                    VisitCardItem={props}
+                />
+                <ScrollView style={{height:"50%",padding:20, marginBottom:90}}>
+                    <View >
                         <Text >address</Text>
                         <TextInput
                             value={address}
                             onChangeText={this.handleAdressChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -89,6 +120,7 @@ export default class EditVisitCardScreen extends React.Component {
                         <TextInput
                             value={company}
                             onChangeText={this.handleCompanyChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -96,6 +128,7 @@ export default class EditVisitCardScreen extends React.Component {
                         <TextInput
                             value={facebookUrl}
                             onChangeText={this.handlefacebookUrlChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -103,6 +136,7 @@ export default class EditVisitCardScreen extends React.Component {
                         <TextInput
                             value={instagram}
                             onChangeText={this.handleInstagramChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -110,6 +144,7 @@ export default class EditVisitCardScreen extends React.Component {
                         <TextInput
                             value={jobTitle}
                             onChangeText={this.handleJobTitleChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
                     <View>
@@ -117,23 +152,26 @@ export default class EditVisitCardScreen extends React.Component {
                         <TextInput
                             value={linkedInUrl}
                             onChangeText={this.handleLinkedInUrlChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
 
-                    <View>
+                    <View >
                         <Text >Navn:</Text>
                         <TextInput
                             value={name}
-                            onChangeText={this.handlenameChange()}
+                            onChangeText={this.handlenameChange}
+                            style={GlobalStyles.inputField}
                         />
                     </View>
 
 
 
                     <Button title="Gem visitkort" onPress={this.updateTask} />
+                    <View style={{ marginBottom:90}}></View>
 
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         );
     }
 }

@@ -24,7 +24,7 @@ export default class ListVisitCardItem extends React.Component{
         const{VisitCardItem} = this.props
 
         return(
-                <View style={styles.mainContainer}>
+                <View style={styles.mainListVisitCardContainer}>
                     <View style={styles.cardImgContainer}>
                         <Image
                             source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
@@ -91,10 +91,10 @@ export default class ListVisitCardItem extends React.Component{
     }
 }
 const styles = StyleSheet.create({
-    mainContainer:{
-        backgroundColor: "transparent",
+    mainListVisitCardContainer:{
         alignSelf: "center",
         margin: 10,
+        backgroundColor:"white",
         marginBottom:30,
         flexDirection: "column",
         width: screenWidth - 20,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     },
     textContainer:{
         zIndex:1,
-        backgroundColor: "#fff",
+        backgroundColor: "white",
         marginTop: -10,
         padding:20,
         borderBottomLeftRadius: scale(12),
