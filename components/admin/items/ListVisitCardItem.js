@@ -1,8 +1,10 @@
 import {Button, Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as React from 'react';
 import {scale, verticalScale} from "react-native-size-matters";
+import firebase from "firebase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AntDesign } from '@expo/vector-icons';
+import GlobalStyles from "../../modules/GlobalStyle";
 
 let screenWidth = Dimensions.get("window").width;
 let screenHeight = Dimensions.get("window").height;
@@ -22,7 +24,6 @@ export default class ListVisitCardItem extends React.Component{
         const{VisitCardItem} = this.props
 
         return(
-            <TouchableOpacity onPress={this.handlePress}>
                 <View style={styles.mainContainer}>
                     <View style={styles.cardImgContainer}>
                         <Image
@@ -33,35 +34,59 @@ export default class ListVisitCardItem extends React.Component{
                     <View style={styles.textContainer}>
                         <View style={styles.textInnerContainer}>
                             <View style={styles.profileImageContainer}>
-                                <Image
-                                    source={require('../../../assets/visitCard/VisitCard_Profile.png')}
-                                    style={styles.profileImage}
-                                />
+                                { true ?
+                                    <Image
+                                        source={require('../../../assets/visitCard/Personal.jpg')}
+                                        style={styles.profileImage}
+                                    />
+                                    :
+                                    <Image
+                                        source={require('../../../assets/visitCard/Personal.jpg')}
+                                        style={styles.profileImage}
+                                    />
+                                }
+                                <Text style={styles.visitcardText}> {VisitCardItem.name}</Text>
+                                <Text style={styles.visitcardText}> {VisitCardItem.jobTitle} hos {VisitCardItem.company} </Text>
+                                <Text style={styles.visitcardText}> {VisitCardItem.email} </Text>
+                                <Text style={styles.visitcardText}> {VisitCardItem.address} </Text>
                             </View>
                             <View styles={styles.visitCardTextContainer}>
-                                <Text style={styles.visitcardText}>Navn: {VisitCardItem.name}</Text>
-                                <Text style={styles.visitcardText}>Jobtitel: {VisitCardItem.jobTitle}</Text>
-                                <Text style={styles.visitcardText}>Virksomhed: {VisitCardItem.company}</Text>
-                            </View>
-                            <View
-                                style={ styles.icons}
-                            >
-                            { VisitCardItem.linkedInUrl
-                                ? (
-                                <TouchableOpacity onPress={() => Linking.openURL(VisitCardItem.linkedInUrl)}>
-                                    <AntDesign name="linkedin-square" style={styles.icons} color="black" />
-                                    <Text>{VisitCardItem.linkedInUrl}</Text>
+                                <TouchableOpacity style={GlobalStyles.touchButton}  onPress={this.handlePress} >
+                                    <Text style={{color: "white"}}>
+                                        {VisitCardItem.id === firebase.auth().currentUser.uid ?
+                                            "Rediger visitkort"
+                                            :
+                                                "se visitkort"
+                                        }
+
+                                    </Text>
                                 </TouchableOpacity>
-                                 )
-                                : null}
+                                <View
+                                    style={ styles.icons}
+                                >
+                                    { VisitCardItem.linkedInUrl
+                                        ? (
+                                            <TouchableOpacity onPress={() => Linking.openURL(VisitCardItem.linkedInUrl)}>
+                                                <AntDesign name="linkedin-square" size={25} color="black" />
+                                            </TouchableOpacity>
+                                        )
+                                        : null}
+                                        { VisitCardItem.facebookUrl
+                                        ? (
+                                            <TouchableOpacity onPress={() => Linking.openURL(VisitCardItem.facebookUrl)}>
+                                                <AntDesign name="facebook-square" size={25} color="black" />
+                                            </TouchableOpacity>
+                                        )
+                                        : null}
+                                </View>
                             </View>
+
                         </View>
 
 
 
                     </View>
                 </View>
-            </TouchableOpacity>
         )
     }
 }
@@ -70,6 +95,7 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         alignSelf: "center",
         margin: 10,
+        marginBottom:30,
         flexDirection: "column",
         width: screenWidth - 20,
         borderWidth: 0,
@@ -88,16 +114,19 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: scale(12),
         borderTopRightRadius: scale(12),
         backgroundColor: "transparent",
-        height: verticalScale(200)
+        height: verticalScale(100)
     },
     cardImage:{
         width: screenWidth - 20,
-        height: verticalScale(200),
+        height: verticalScale(100),
         resizeMode: "cover",
-        borderRadius: 12
+        borderRadius: 12,
+        position:'absolute'
     },
     textContainer:{
+        zIndex:1,
         backgroundColor: "#fff",
+        marginTop: -10,
         padding:20,
         borderBottomLeftRadius: scale(12),
         borderBottomRightRadius: scale(12)
@@ -107,7 +136,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     profileImageContainer:{
-        width:"20%",
+        width:"50%",
+        marginTop:0,
         backgroundColor: "transparent",
         flex: 1,
         borderBottomLeftRadius: scale(12),
@@ -115,19 +145,23 @@ const styles = StyleSheet.create({
         alignItems: "flex-start"
     },
     profileImage:{
-        width: scale(50),
-        height: scale(50),
-        borderRadius:25
+        width: 100,
+        height: 100,
+        borderRadius:55,
+        marginTop:-70
     },
     visitcardText:{
-        color: "#000", fontSize: scale(11), margin: scale(3)
+        color: "#000",
+        fontSize: 15,
+        margin: scale(3)
     },
     icons:{
         backgroundColor: "#fff",
         flex: 1,
-        borderBottomRightRadius: scale(12),
-        justifyContent: "center",
-        alignItems: "center"
+        borderBottomRightRadius: scale(20),
+        justifyContent: "space-around",
+        flexDirection:"row",
+        alignItems: "flex-end"
     },
     visitCardTextContainer:{
         flex: 1,

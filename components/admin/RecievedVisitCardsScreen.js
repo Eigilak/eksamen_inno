@@ -115,12 +115,14 @@ export default class RecievedVisitCardsScreen extends React.Component {
 
 const styles = StyleSheet.create({
     inlineScroll:{
-        height: 100
+        height: 100,
+
     },
     container: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+
     }
 });

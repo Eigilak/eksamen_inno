@@ -3,10 +3,11 @@ import {StyleSheet} from "react-native";
 const GlobalStyles = StyleSheet.create({
     mainContainer:{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f7f9fa',
         width:"100%",
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 20
     },
     innerContainer:{
         minWidth:'80%'
@@ -17,7 +18,7 @@ const GlobalStyles = StyleSheet.create({
     inputField: {
         borderWidth: 2,
         borderRadius:4,
-        margin: 10,
+        marginBottom:10,
         padding: 10,
     },
     inputFieldError:{
@@ -30,12 +31,24 @@ const GlobalStyles = StyleSheet.create({
     myInfoContainer:{
     },
     myInfoRightContainer:{
+        flex:1,
+        width:"100%"
 
     },
-    /*Create and edit Container*/
-    createContainer:{
-        flex:1,
+
+    //Create style
+    createButtonContainer:{
+      flex:1,
+      flexDirection:"row",
         flexWrap:"wrap",
+      justifyContent: "space-between"
+    },
+    /*Over all style*/
+    touchButton:{
+        backgroundColor: "#0a66c2",
+        borderRadius: 20,
+        padding:10,
+        maxWidth:"100%",
     }
 });
 
