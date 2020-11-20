@@ -22,7 +22,7 @@ export default class CreateVisitCardScreen extends React.Component {
     componentDidMount() {
         this.getCurrentUserAttributes()
     }
-
+/*Test git*/
 
     handleAdressField = text => this.setState({ address: text });
     handleCompanyField = text => this.setState({ company: text });
