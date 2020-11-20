@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import {Button, StyleSheet, Text, View,ScrollView,SafeAreaView, Alert, TextInput} from 'react-native';
+import {Button, StyleSheet, Text, View,ScrollView,SafeAreaView, Alert, TextInput,TouchableOpacity} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
@@ -17,6 +17,7 @@ export default class CreateVisitCardScreen extends React.Component {
         jobTitle:'',
         linkedInUrl: '',
         name:'',
+        email:firebase.auth().currentUser.email
     }
 
     componentDidMount() {
@@ -31,15 +32,16 @@ export default class CreateVisitCardScreen extends React.Component {
     handleJobTitleField = text => this.setState({ jobTitle: text });
     handleLinkedInUrlField = text => this.setState({ linkedInUrl: text });
     handlenameField = text => this.setState({  name: text });
+    handleEmailField = text => this.setState({email:text})
+
     handleSave = async () => {
-            const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name } = this.state;
+            const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name,email } = this.state;
             const {navigation} = this.props;
             try {
-
                await firebase
                   .database()
                   .ref('/visitkort/')
-                  .push({ address, company,facebookUrl,id, instagram,jobTitle,linkedInUrl,name });
+                  .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
 
               Alert.alert(`Saved`);
               this.setState({
@@ -49,6 +51,7 @@ export default class CreateVisitCardScreen extends React.Component {
                   instagram: '',
                jobTitle:'',
                linkedInUrl: '',
+                  email: ''
               });
                 navigation.goBack();
 
@@ -111,76 +114,102 @@ export default class CreateVisitCardScreen extends React.Component {
 
 
     render() {
-        const {address, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
+        const {address, email, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
         return(
 
             <SafeAreaView style={GlobalStyles.mainContainer}>
                 <TitleModule title = "Opret et nyt visitkort"/>
                 <ScrollView style={GlobalStyles.createContainer}>
                     <View>
-                        <Text >address</Text>
-                        <TextInput
-                            value={address}
-                            onChangeText={this.handleAdressField}
-                            style={GlobalStyles.inputField}
-                        />
+                        <View>
+                            <Text >Navn:</Text>
+                            <TextInput
+                                value={name}
+                                onChangeText={this.handlenameField}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text >Email:</Text>
+                            <TextInput
+                                value={email}
+                                onChangeText={this.handleEmailField}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+                        <View>
+                            <Text >jobTitle</Text>
+                            <TextInput
+                                value={jobTitle}
+                                onChangeText={this.handleJobTitleField}
+                                style={GlobalStyles.inputField}
+
+                            />
+                        </View>
+
+                        <View>
+                            <Text >company</Text>
+                            <TextInput
+                                value={company}
+                                onChangeText={this.handleCompanyField}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text >address</Text>
+                            <TextInput
+                                value={address}
+                                onChangeText={this.handleAdressField}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
                     </View>
-                    <View>
-                        <Text >company</Text>
-                        <TextInput
-                            value={company}
-                            onChangeText={this.handleCompanyField}
-                            style={GlobalStyles.inputField}
-                        />
-                     </View>
+
                      <View>
-                     <Text >facebookUrl</Text>
-                     <TextInput
-                         value={facebookUrl}
-                           onChangeText={this.handlefacebookUrlField}
-                         style={GlobalStyles.inputField}
-                     />
-                            </View>
-                      <View>
-                      <Text >instagram</Text>
-                      <TextInput
-                          value={instagram}
-                            onChangeText={this.handleInstagramField}
-                          style={GlobalStyles.inputField}
+                         <Text style={{fontSize:30,paddingTop:10}}> Sociale</Text>
+                         <View>
+                             <Text >facebookUrl</Text>
+                             <TextInput
+                                 value={facebookUrl}
+                                 onChangeText={this.handlefacebookUrlField}
+                                 style={GlobalStyles.inputField}
+                             />
+                         </View>
+                         <View>
+                             <Text >instagram</Text>
+                             <TextInput
+                                 value={instagram}
+                                 onChangeText={this.handleInstagramField}
+                                 style={GlobalStyles.inputField}
 
-                      />
-                             </View>
-                      <View>
-                      <Text >jobTitle</Text>
-                      <TextInput
-                          value={jobTitle}
-                            onChangeText={this.handleJobTitleField}
-                          style={GlobalStyles.inputField}
+                             />
+                         </View>
 
-                      />
-                             </View>
-                      <View>
-                      <Text >linkedInUrl</Text>
-                      <TextInput
-                          value={linkedInUrl}
-                            onChangeText={this.handleLinkedInUrlField}
-                          style={GlobalStyles.inputField}
+                         <View>
+                             <Text >linkedInUrl</Text>
+                             <TextInput
+                                 value={linkedInUrl}
+                                 onChangeText={this.handleLinkedInUrlField}
+                                 style={GlobalStyles.inputField}
 
-                      />
-                             </View>
-                    <View>
-                        <Text >Navn:</Text>
-                        <TextInput
-                            value={name}
-                            onChangeText={this.handlenameField}
-                            style={GlobalStyles.inputField}
-                        />
+                             />
+                         </View>
+                     </View>
+
+
+                    <View styles={GlobalStyles.createButtonContainer}>
+                        <TouchableOpacity activeOpacity={0.8} style={GlobalStyles.touchButton}  onPress={this.handleSave}>
+                            <Text style={{color:"white",textAlign:"center"}}>Gem visitkort</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity  activeOpacity={0.8} style={GlobalStyles.touchButton}  onPress={this.handleBack}>
+                            <Text style={{color:"white",textAlign:"center"}}>Gå tilbage</Text>
+                        </TouchableOpacity>
+
                     </View>
-
-                <Button title="Gem visitkort" onPress={this.handleSave} />
-                <Button title="Gå tilbage" onPress={this.handleBack}
-
-                />
              </ScrollView>
             </SafeAreaView>
         );

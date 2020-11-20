@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import {StyleSheet, Text, TextInput, View,Button,Alert, ScrollView,Platform} from 'react-native';
+import {StyleSheet, Text, TextInput, View,Button,Alert, ScrollView,Platform,Picker } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
@@ -25,6 +25,7 @@ export default class ProfilScreen extends React.Component {
         linkedInUrl:'',
         facebookUrl:'',
         instagram:'',
+        type:'',
         error:true
     }
 
@@ -38,6 +39,7 @@ export default class ProfilScreen extends React.Component {
     handleChangeFacebookUrl = facebookUrl => this.setState({ facebookUrl });
     handleChangeLinkedInUrl = linkedInUrl => this.setState({ linkedInUrl });
     handleChangeInstagram = instagram => this.setState({ instagram });
+    handleChangeType = type => this.setState({ type });
 
     /*For ikke at logge ud efter email update køres denne funktion*/
     reauthenticate = (currentPassword) => {
@@ -49,16 +51,6 @@ export default class ProfilScreen extends React.Component {
 
     componentDidMount() {
         this.getCurrentUserAttributes()
-    }
-
-    isValidUrl=(string)=>{
-        try {
-            new URL(string);
-        } catch (e) {
-            return false;
-        }
-
-        return true;
     }
 
     getCurrentUserAttributes = async () =>{
@@ -108,7 +100,7 @@ export default class ProfilScreen extends React.Component {
 
     /*Gem brugerprofil*/
     saveProfile = async () =>{
-        var {id,name,email,password,address, jobTitle, company, linkedInUrl, facebookUrl, instagram,unique_attribute_id} = this.state
+        var {id,name,email,password,address,type, jobTitle, company, linkedInUrl, facebookUrl, instagram,unique_attribute_id} = this.state
         var currentEmail = firebase.auth().currentUser.email;
         var newEmail = email
         var currentPassword = password
@@ -122,9 +114,6 @@ export default class ProfilScreen extends React.Component {
                  }).catch((error) => { console.log("Fejl i password \n",error); });
              }).catch((error) => { console.log(error); });
          }
-         if(!this.isValidUrl(linkedInUrl)){
-             Alert.alert('Vi tager kun imod URL')
-         }
 
         try {
             if(!unique_attribute_id){
@@ -132,16 +121,20 @@ export default class ProfilScreen extends React.Component {
                 const reference = firebase
                     .database()
                     .ref('/UserAttributes/')
-                    .push({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
-
+                    .push({ id,name,type, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
+                if(Platform.OS != "web"){
+                    Alert.alert("Din info er nu opdateret");
+                }else {
+                    alert("Dine info er nu opdateret")
+                }
             }else {
                 try {
                      await firebase
                         .database()
                         .ref('/UserAttributes/'+unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret
-                        .update({ id,name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
-                         this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                        .update({ id,name,type ,address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
+                         this.setState({name, address,type,jobTitle, company, linkedInUrl, facebookUrl, instagram})
                     // Når bilen er ændret, går vi tilbage.
                     if(Platform.OS != "web"){
                         Alert.alert("Din info er nu opdateret");
@@ -158,63 +151,79 @@ export default class ProfilScreen extends React.Component {
     }
 
     render() {
-        const { email, name,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password,unique_attribute_id } = this.state;
+        const { email, name,type,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password,unique_attribute_id } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
                 <ScrollView style={GlobalStyles.createContainer}>
                     <TitleModule title={"Din profil"}/>
                     <View style={GlobalStyles.myInfoContainer}>
-                        <Text> Oplysninger</Text>
-                        <View style={GlobalStyles.myInfoRightContainer}>
+
+                        <View>
+                            <Text> Email</Text>
                             <TextInput
                                 placeholder="email@email.dk"
                                 value={email}
                                 onChangeText={this.handleChangeEmail}
                                 style={GlobalStyles.inputField}
                             />
+                        </View>
+                        <View>
+                            <Text> Type</Text>
+                            <Picker
+                                selectedValue={type}
+                                style={{height: 50, width: "100%"}}
+                                onValueChange={this.handleChangeType}>
+                                <Picker.Item label="company" value="company" />
+                                <Picker.Item label="personal" value="personal" />
+                            </Picker>
+                        </View>
+                        <View>
+                            <Text>Navn</Text>
                             <TextInput
                                 placeholder="name"
                                 value={name}
                                 onChangeText={this.handleChangeName}
                                 style={GlobalStyles.inputField}
                             />
-                            <TextInput
-                                placeholder="Addresse "
-                                value={address}
-                                onChangeText={this.handleChangeAddress}
-                                style={GlobalStyles.inputField}
-                            />
-                            <TextInput
-                                placeholder="company"
-                                value={company}
-                                onChangeText={this.handleChangeCompany}
-                                style={GlobalStyles.inputField}
-                            />
-                            <TextInput
-                                placeholder="Jobtitel"
-                                value={jobTitle}
-                                onChangeText={this.handleChangeJobTitle}
-                                style={GlobalStyles.inputField}
-                            />
-                            <TextInput
-                                placeholder="facebook link"
-                                value={facebookUrl}
-                                onChangeText={this.handleChangeFacebookUrl}
-                                style={GlobalStyles.inputField}
-                            />
-                            <TextInput
-                                placeholder="LinkedIn Url"
-                                value={linkedInUrl}
-                                onChangeText={this.handleChangeLinkedInUrl}
-                                style={GlobalStyles.inputField}
-                            />
-                            <TextInput
-                                placeholder="instagram"
-                                value={instagram}
-                                onChangeText={this.handleChangeInstagram}
-                                style={GlobalStyles.inputField}
-                            />
                         </View>
+
+                        <TextInput
+                            placeholder="Addresse "
+                            value={address}
+                            onChangeText={this.handleChangeAddress}
+                            style={GlobalStyles.inputField}
+                        />
+                        <TextInput
+                            placeholder="company"
+                            value={company}
+                            onChangeText={this.handleChangeCompany}
+                            style={GlobalStyles.inputField}
+                        />
+                        <TextInput
+                            placeholder="Jobtitel"
+                            value={jobTitle}
+                            onChangeText={this.handleChangeJobTitle}
+                            style={GlobalStyles.inputField}
+                        />
+                        <TextInput
+                            placeholder="facebook link"
+                            value={facebookUrl}
+                            onChangeText={this.handleChangeFacebookUrl}
+                            style={GlobalStyles.inputField}
+                        />
+                        <TextInput
+                            placeholder="LinkedIn Url"
+                            value={linkedInUrl}
+                            onChangeText={this.handleChangeLinkedInUrl}
+                            style={GlobalStyles.inputField}
+                        />
+                        <TextInput
+                            placeholder="instagram"
+                            value={instagram}
+                            onChangeText={this.handleChangeInstagram}
+                            style={GlobalStyles.inputField}
+                        />
+
                         <View>
                             <TextInput
                                 placeholder="Verify your password"
@@ -224,6 +233,7 @@ export default class ProfilScreen extends React.Component {
                             />
                             <Button title={"Gem"} onPress={this.saveProfile}/>
                         </View>
+
                     </View>
                 </ScrollView>
             </View>

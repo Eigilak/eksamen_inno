@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 import TitleModule from "../modules/TitleModule.js";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons,AntDesign } from '@expo/vector-icons';
 import GlobalStyles from "../modules/GlobalStyle";
 
 
@@ -57,8 +57,8 @@ export default class loginScreen extends React.Component {
         const { errorMessage, email, password, isCompleted } = this.state;
         return (
             <View style={GlobalStyles.mainContainer}>
-                <TitleModule title="Velkommen til BelongTO"/>
-                <MaterialCommunityIcons name="home-map-marker" size={60} color="#0E71EB" />
+                <TitleModule title="Velkommen til VisitKort Appen"/>
+                <AntDesign name="idcard" size={60} color="#0E71EB" />
                 <View style={GlobalStyles.innerContainer}>
                     <Text style={GlobalStyles.header}>Login</Text>
                     <TextInput

@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, FlatList,TouchableOpacity } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import ListVisitCardItem from "./items/ListVisitCardItem";
@@ -34,7 +34,7 @@ export default class MyVisitCardsScreen extends React.Component {
                         console.log(snapshot.val())
                         this.setState({visitCards:snapshot.val()})
                         var length = Object.keys(snapshot.val())
-                        if(length.length > 1){
+                        if(length.length > 10){
                             this.setState({premium_max: true})
                         }
                     }
@@ -104,12 +104,17 @@ export default class MyVisitCardsScreen extends React.Component {
 
                         : <Text> Ingen oprettet sad VisitKort</Text>
                     }
-
-                    <Button
-                        title={ premium_max ?"Maximum af 10 visitkort nået - køb premium" :"Opret visitkort"}
-                        onPress={() => { premium_max ? this.props.navigation.navigate('CreateVisitCard') :this.props.navigation.navigate('CreateVisitCard')}}
-                    />
-
+                    <View style={{right:10,bottom:10, borderWidth:2, borderRadius:50, backgroundColor: "transparent", position:"absolute"}}>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={GlobalStyles.touchButton}
+                            onPress={() => { premium_max ? this.props.navigation.navigate('CreateVisitCard') :this.props.navigation.navigate('CreateVisitCard')}}
+                        >
+                            <Text style={{color:"white"}}>
+                                { premium_max ? "Maximum af 10 visitkort nået - køb premium" :"Opret visitkort"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
             )
@@ -120,11 +125,11 @@ export default class MyVisitCardsScreen extends React.Component {
 
 const styles = StyleSheet.create({
     inlineScroll:{
-        height: 100
+        height: "auto"
     },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'transparent',
         alignItems: 'center',
         justifyContent: 'center',
     }
