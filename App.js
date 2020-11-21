@@ -6,7 +6,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
 import firebase from "firebase";
 import {createStackNavigator} from "react-navigation-stack";
-
+import * as Permissions from 'expo-permissions';
+import { DeviceMotion } from 'expo-sensors';
 /*Screens*/
 import LoginScreen from "./components/login/LoginScreen";
 import SignupScreen from "./components/login/SignupScreen";
@@ -175,6 +176,10 @@ export default class App extends React.Component{
     user:null
   }
 
+  componentDidMount() {
+    this.updateMotionPermission();
+  }
+
   /*Sørg for at states bliver nulsat efter de er blevet bvrugt*/
 
   /*Init*/
@@ -195,6 +200,11 @@ export default class App extends React.Component{
 
     firebase.auth().signOut()
 
+  }
+
+  updateMotionPermission = async() => {
+    const { status } = await Permissions.askAsync(Permissions.MOTION);
+    this.setState({ hasMotionPermission: status === 'granted' });
   }
   /*Set Auth state*/
   observeAuth = async () => {
