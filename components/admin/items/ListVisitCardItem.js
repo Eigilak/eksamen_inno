@@ -1,4 +1,4 @@
-import {Button, Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Button, Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View,Alert} from 'react-native';
 import * as React from 'react';
 import {scale, verticalScale} from "react-native-size-matters";
 import firebase from "firebase";
@@ -20,16 +20,58 @@ export default class ListVisitCardItem extends React.Component{
         onSelect(id)
     };
 
+    confirmDelete = () => {
+        if(Platform.OS ==='ios' || Platform.OS ==='android'){
+            Alert.alert('Are you sure?', 'Do you want to delete the car?', [
+                { text: 'Cancel', style: 'cancel' },
+                // Vi bruger this.handleDelete som eventHandler til onPress
+                { text: 'Delete', style: 'destructive', onPress: this.handleDelete },
+            ]);
+        } else {
+            if(confirm('Er du sikker på du vil slette denne bil?')){
+                this.handleDelete()
+            }
+        }
+    };
+
+    // Vi spørger brugeren om han er sikker
+
+    // Vi sletter den aktuelle bil
+    handleDelete = () => {
+        const { navigation, id} = this.props;
+
+        try {
+            firebase
+                .database()
+                // Vi sætter bilens ID ind i stien
+                .ref('/visitkort/'+id)
+                // Og fjerner data fra den sti
+                .remove();
+
+            // Og går tilbage når det er udført
+        } catch (error) {
+            Alert.alert(error.message);
+        }
+
+    };
+
     render() {
         const{VisitCardItem} = this.props
 
         return(
                 <View style={styles.mainListVisitCardContainer}>
+
                     <View style={styles.cardImgContainer}>
+
                         <Image
                             source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
                             style={styles.cardImage}
                         />
+                        <Text style={{textAlign:"right", paddingHorizontal:10,paddingTop:10}}>
+                            <TouchableOpacity onPress={this.confirmDelete}>
+                                <AntDesign name="closecircle" size={25} color="white" />
+                            </TouchableOpacity>
+                        </Text>
                     </View>
                     <View style={styles.textContainer}>
                         <View style={styles.textInnerContainer}>

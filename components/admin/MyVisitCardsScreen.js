@@ -1,7 +1,12 @@
 import firebase from "firebase";
-import { StyleSheet, Text, View, FlatList,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList,TouchableOpacity,PermissionsAndroid } from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
+
+
+
+
+//Screens
 import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
 
@@ -9,7 +14,8 @@ export default class MyVisitCardsScreen extends React.Component {
     state={
         visitCards:[],
         loading:false,
-        premium_max:false
+        premium_max:false,
+        hasMotionPermission: null,
     }
 
     constructor() {
@@ -54,7 +60,7 @@ export default class MyVisitCardsScreen extends React.Component {
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-        const { visitCards,loading,premium_max } = this.state;
+        const { visitCards,loading,premium_max,hasMotionPermission } = this.state;
         // Vi viser ingenting hvis der ikke er data
         if (!visitCards) {
             return null;
@@ -80,6 +86,15 @@ export default class MyVisitCardsScreen extends React.Component {
 
             }
         };
+
+        if (hasMotionPermission === false) {
+            return (
+                <View>
+                    <Text>Du har ikke adgang til kamera.</Text>
+                    <Button onPress={this.handleSettingLink} title='Get permissions to access Motion'> </Button>
+                </View>
+            );
+        }
 
         if(loading){
             return (

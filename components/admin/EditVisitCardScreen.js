@@ -97,7 +97,7 @@ export default class EditVisitCardScreen extends React.Component {
         }
         return(
             <View style={{paddingTop:30}}>
-                <Text style={{textAlign:"right", paddingHorizontal:20,}}>
+                <Text style={{textAlign:"right", paddingHorizontal:20}}>
                     <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
                         <AntDesign name="closecircle" size={25} color="#0a66c2" />
                     </TouchableOpacity>
