@@ -22,7 +22,7 @@ export default class ListVisitCardItem extends React.Component{
 
     confirmDelete = () => {
         if(Platform.OS ==='ios' || Platform.OS ==='android'){
-            Alert.alert('Are you sure?', 'Do you want to delete the car?', [
+            Alert.alert('Er du sikkert?', 'Vil du gerne slette bilen?', [
                 { text: 'Cancel', style: 'cancel' },
                 // Vi bruger this.handleDelete som eventHandler til onPress
                 { text: 'Delete', style: 'destructive', onPress: this.handleDelete },
