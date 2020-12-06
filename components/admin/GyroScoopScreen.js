@@ -1,81 +1,104 @@
 import React, { Component } from 'react';
-import { Text,Button, View, StyleSheet } from 'react-native';
+import {Text, Button, View, StyleSheet, Alert} from 'react-native';
 import { Constants, DangerZone } from 'expo';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { DeviceMotion } from 'expo-sensors';
-
-export default class GyroScoopScreen extends Component {
+import firebase from "firebase";
+export default class DeviceOrientationExample extends React.Component {
     state = {
-        motionData: []
-    };
+        deviceMotionData: {},
+        orientation:0,
+        onceFired:false,
+        address: 'Howitzvej 60',
+        company: 'CBS',
+        facebookUrl: 'https://www.facebook.com/CopenhagenBusinessSchool',
+        id: 'osd4VTO7vPhCIajcRpqrIBDwH9z2',
+        instagram: 'https://www.instagram.com/cbscph/',
+        jobTitle:'President',
+        linkedInUrl: 'https://www.linkedin.com/school/copenhagen-business-school/',
+        name:'Karl Emil Jensen',
+        email:'cbs@student.cbs.dk'
+    }
 
     componentDidMount() {
-        this.toggleSubscription()
+        ScreenOrientation.getOrientationAsync();
+        ScreenOrientation.unlockAsync();
+
+        this._toggle();
     }
 
     componentWillUnmount() {
-        this.unsubscribe()
+        this._unsubscribe();
     }
 
-    toggleSubscription = () => {
-        if (this.subscription) {
-            this.unsubscribe();
+    _toggle = () => {
+        if (this._subscription) {
+            this._unsubscribe();
         } else {
-            this.subscribe();
+            this._subscribe();
         }
     }
 
-    subscribe = () => {
-        this.subscription = DeviceMotion.addListener(motionData => {
-            this.setState({ motionData });
+    _subscribe = () => {
+        const {onceFired} = this.state;
+        var count = 0
+        this._subscription = DeviceMotion.addListener((deviceMotionData) => {
+            if(deviceMotionData.orientation === 90){
+                console.log(count)
+                if(count === 1){
+                    console.log('Done');
+                    count = 0;
+                }
+
+            }
+            this.setState({ orientation:deviceMotionData.orientation })
         });
+
     }
 
-    unsubscribe = () => {
-        this.subscription && this.subscription.remove();
-        this.subscription = null;
+    _unsubscribe = () => {
+        this._subscription && this._subscription.remove();
+        this._subscription = null;
     }
 
+    handleSave = async () => {
+        const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name,email } = this.state;
+        const {navigation} = this.props;
+        try {
+            await firebase
+                .database()
+                .ref('/visitCard/'+id)
+                .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
 
-    pressIt = () => {
-        const{motionData} = this.state;
-        const motionDataArray= [];
-        console.log(motionData)
-        motionDataArray.push(motionData)
-        motionDataArray.map((motionDataItem,index) => {
-            console.log("Orientation", motionDataItem.orientation)
-            console.log("Y", motionDataItem.beta)
-            const alpha = Math.abs(motionDataItem.alpha);
-            const potraitOrLandscape = alpha > 3 || (alpha > 0 && alpha < 0.5) ? 'landscape' : 'protrait';
-            this.setState({orientation: potraitOrLandscape})
-        });
-    }
+            Alert.alert(`Visitkort oprettet`);
+            this.setState({
+                address: '',
+                company: '',
+                facebookUrl: '',
+                instagram: '',
+                jobTitle:'',
+                linkedInUrl: '',
+                email: ''
+            });
+            navigation.goBack();
+
+        } catch (error) {
+            Alert.alert(`Error: ${error.message}`);
+        }
+
+    };
 
     render() {
+        const {orientation,onceFired} = this.state
+
+        if(orientation !== 0 && orientation === 90 || orientation === -90){
+
+        }
+
         return (
-         <View style={styles.container}>
-             <Button title={"Title"} onPress={this.pressIt}/>
-         </View>
+            <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
+                <Text>DeviceMotion orientation: {orientation}</Text>
+            </View>
         );
     }
-    }
-
-const styles = StyleSheet.create({
-container: {
-flex: 1,
-alignItems: 'center',
-justifyContent: 'center',
-backgroundColor: '#ecf0f1',
-},
-});
-/*
-* const motionData = this.state;
-const motionDataArray = Object.values(motionData);
-console.log(motionDataArray)
-motionDataArray.map((motionDataItem,index) => {
-/* console.log("acceleration",motionDataItem.acceleration.y)
- console.log("X",motionDataItem.rotationRate.alpha)
- console.log("Y",motionDataItem.rotationRate.beta)
- const alpha = Math.abs(motionDataItem.rotationRate.beta);
- const potraitOrLandscape = alpha > 3 || (alpha > 0 && alpha < 0.5) ? 'landscape' : 'protrait';
- this.setState({orientation:potraitOrLandscape})
-* */
+}
