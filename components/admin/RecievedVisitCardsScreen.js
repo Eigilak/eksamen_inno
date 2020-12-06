@@ -1,11 +1,10 @@
 import firebase from "firebase";
-import {StyleSheet, Text, View, Button, FlatList, SafeAreaView, Alert} from 'react-native';
+import {StyleSheet, Text, View, Button, FlatList, SafeAreaView, Alert, TouchableOpacity} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
-import {DeviceMotion} from "expo-sensors";
-import * as ScreenOrientation from "expo-screen-orientation";
+import {AntDesign,MaterialIcons} from "@expo/vector-icons";
 
 export default class RecievedVisitCardsScreen extends React.Component {
     state={
@@ -14,6 +13,15 @@ export default class RecievedVisitCardsScreen extends React.Component {
         premium_max:false,
         urlRecieved:'/visitCard/recieved/',
         id: firebase.auth().currentUser.uid,
+        myVisitCard:'/visitCard/my/',
+        address: 'Howitzvej 60',
+        company: 'CBS',
+        facebookUrl: 'https://www.facebook.com/CopenhagenBusinessSchool',
+        instagram: 'https://www.instagram.com/cbscph/',
+        jobTitle:'President',
+        linkedInUrl: 'https://www.linkedin.com/school/copenhagen-business-school/',
+        name:'Karl Emil Jensen',
+        email:'cbs@student.cbs.dk'
     }
 
     constructor() {
@@ -60,6 +68,23 @@ export default class RecievedVisitCardsScreen extends React.Component {
         this.props.navigation.navigate('SeeRecievedVisitCard', { id });
     };
 
+
+    handleSave = async () => {
+        const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name,email } = this.state;
+        const {navigation} = this.props;
+        try {
+            await firebase
+                .database()
+                .ref('/visitCard/recieved/'+id)
+                .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
+
+            Alert.alert(`Du har modtaget et visitkort! `);
+
+        } catch (error) {
+            Alert.alert(`Error: ${error.message}`);
+        }
+
+    };
 
 
     /* Her oprettes et array der indeholder information om visitkort*/
@@ -115,6 +140,29 @@ export default class RecievedVisitCardsScreen extends React.Component {
 
                         : <Text> Ingen modtaget VisitKort</Text>
                     }
+
+                    <View style={{right:10,bottom:10, borderWidth:2, borderRadius:50, backgroundColor: "transparent", position:"absolute"}}>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={GlobalStyles.touchButton}
+                            onPress={() => { premium_max ? this.props.navigation.navigate('QR') :this.props.navigation.navigate('QR')}}
+                        >
+                            <Text style={{color:"white"}}>
+                                <AntDesign name="qrcode" size={24} color={"white"} />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{left:10,bottom:10, borderWidth:2, borderRadius:50, backgroundColor: "transparent", position:"absolute"}}>
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            style={GlobalStyles.touchButton}
+                            onPress={this.handleSave}
+                        >
+                            <Text style={{color:"white"}}>
+                                <MaterialIcons name="nfc" size={24} color="white" />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
             )

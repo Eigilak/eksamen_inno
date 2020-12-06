@@ -70,7 +70,7 @@ export default class ListVisitCardItem extends React.Component{
                             source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
                             style={styles.cardImage}
                         />
-                        <Text style={{textAlign:"right", paddingHorizontal:10,paddingTop:10}}>
+                        <Text style={{textAlign:"right", position:"absolute",right:5, paddingHorizontal:10,paddingTop:10}}>
                             <TouchableOpacity onPress={this.confirmDelete}>
                                 <AntDesign name="closecircle" size={25} color="white" />
                             </TouchableOpacity>

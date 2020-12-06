@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, Button } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import TitleModule from "../modules/TitleModule";
+import GlobalStyles from "../modules/GlobalStyle";
+import {color} from "react-native-reanimated";
 
 export default function QrScannerScreen() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -19,30 +22,49 @@ export default function QrScannerScreen() {
     };
 
     if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
+        return <View style={GlobalStyles.mainContainer}>
+            <TitleModule title = "Loading....."/>
+        </View>
+
     }
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
 
     return (
-        <View
-            style={{
-                height: Dimensions.get('window').height,
-                width: Dimensions.get('window').width,
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-            }}>
-            <BarCodeScanner
+        <View style={{ flex: 1 }}>
+            <BarCodeScanner style={{ flex: 1, height:10 }}
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{
-                    height: Dimensions.get('window').height,
-                    width: Dimensions.get('window').width,
-                }}
-            />
+            >
+                <View style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row',
+                    position:"absolute",
+                    bottom:"20%",
+                    left:"25%",
+                    right:"25%",
+                    }}>
+                    {scanned &&
+                    <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            alignSelf: 'flex-end',
+                            alignItems: 'center',
+                        }}
+                        onPress={() => {
+                            setScanned(false)
+                        }}>
+                        <Text style={[GlobalStyles.touchButton, {color: "white"}]}>
+                            Scan igen
+                        </Text>
+                    </TouchableOpacity>
+                    }
 
-            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                </View>
+
+            </BarCodeScanner>
+
         </View>
     );
 }

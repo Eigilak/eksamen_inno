@@ -43,14 +43,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
       )
     }
   },
-  QR:{
-    screen:QrScannerScreen,
-    navigationOptions:{
-      tabBarIcon:({tintColor}) =>(
-          <AntDesign name="qrcode" size={24} color={tintColor} />
-      )
-    }
-  },
+
   Profil:{
     screen:ProfilScreen,
     navigationOptions:{
@@ -108,7 +101,7 @@ const AdminBottomNavigator = createBottomTabNavigator({
 });
 
 const AdminStackNavigation = createStackNavigator({
-  BottomNavigation:{
+  Menu:{
     screen:AdminBottomNavigator,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
@@ -117,13 +110,21 @@ const AdminStackNavigation = createStackNavigator({
       headerShown:false
     }
   },
-  CreateVisitCard:{
+  Opret:{
     screen:CreateVisitCardScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
           <AntDesign name="dashboard" size={24} color={tintColor} />
       ),
       headerShown:false
+    }
+  },
+  QR:{
+    screen:QrScannerScreen,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="qrcode" size={24} color={tintColor} />
+      ),
     }
   },
   EditMyVisitCard:{

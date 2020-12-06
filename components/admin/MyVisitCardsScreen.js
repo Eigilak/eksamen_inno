@@ -15,8 +15,6 @@ export default class MyVisitCardsScreen extends React.Component {
         premium_max:false,
         myVisitCard:'/visitCard/my/',
         hasMotionPermission: null,
-        deviceMotionData: {},
-        orientation:0,
         onceFired:false,
         address: 'Howitzvej 60',
         company: 'CBS',
@@ -33,35 +31,9 @@ export default class MyVisitCardsScreen extends React.Component {
         super();
     }
     componentDidMount() {
-        ScreenOrientation.getOrientationAsync();
-        ScreenOrientation.unlockAsync();
-
-
-        ScreenOrientation.addOrientationChangeListener((deviceMotionData) => {
-           if(deviceMotionData.orientationInfo.orientation === 1){
-               this.handleSave();
-           }
-        });
         this.getYourVisitCards();
     }
 
-    handleSave = async () => {
-        const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name,email } = this.state;
-        const {navigation} = this.props;
-        try {
-            await firebase
-                .database()
-                .ref('/visitCard/recieved/'+id)
-                .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
-
-            Alert.alert(`Du har modtaget et visitkort! `);
-            navigation.goBack();
-
-        } catch (error) {
-            Alert.alert(`Error: ${error.message}`);
-        }
-
-    };
 
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getYourVisitCards = async () =>{
@@ -96,13 +68,6 @@ export default class MyVisitCardsScreen extends React.Component {
         this.props.navigation.navigate('EditMyVisitCard', { id });
     };
 
-    orientationCheck =() => {
-       const {orientation } = this.state;
-
-       const onceFired =
-        console.log(onceFired)
-}
-
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
         const { visitCards,loading,premium_max,orientation,onceFired } = this.state;
@@ -110,8 +75,6 @@ export default class MyVisitCardsScreen extends React.Component {
         if (!visitCards) {
             return null;
         }
-
-        this.orientationCheck();
         // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
         const visitCardsArray = Object.values(visitCards);
         // Vi skal også bruge alle IDer, så vi tager alle keys også.
@@ -160,7 +123,7 @@ export default class MyVisitCardsScreen extends React.Component {
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={GlobalStyles.touchButton}
-                            onPress={() => { premium_max ? this.props.navigation.navigate('CreateVisitCard') :this.props.navigation.navigate('CreateVisitCard')}}
+                            onPress={() => { premium_max ? this.props.navigation.navigate('Opret') :this.props.navigation.navigate('Opret')}}
                         >
                             <Text style={{color:"white"}}>
                                 { premium_max ? "Maximum af 10 visitkort nået - køb premium" :"Opret visitkort"}
