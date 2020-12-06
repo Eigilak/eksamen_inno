@@ -18,6 +18,7 @@ import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScree
 import ProfilScreen from "./components/admin/ProfilScreen";
 import EditVisitCardScreen from "./components/admin/EditVisitCardScreen";
 import SeeRecievedVisitCardItem from "./components/admin/items/SeeRecievedVisitCardItem";
+import QrScannerScreen from "./components/admin/QrScannerScreen";
 import GyroScoopScreen from "./components/admin/GyroScoopScreen";
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
@@ -25,32 +26,41 @@ if(Platform.OS !== "web"){
 }
 /*Dette er min navigator til når man er logget ind*/
 const AdminBottomNavigator = createBottomTabNavigator({
-  MyVisitCards:{
+  Mine:{
     screen:MyVisitCardsScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
-          <AntDesign name="dashboard" size={24} color={tintColor} />
+          <MaterialIcons name="account-box" size={24} color={tintColor} />
       )
     }
   },
-  RecievedVisitCards:{
+  Modtaget:{
     screen:RecievedVisitCardsScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
-          <AntDesign name="dashboard" size={24} color={tintColor} />
+          <AntDesign name="inbox" size={24} color={tintColor}  />
+
       )
     }
   },
-  ProfileScreen:{
+  QR:{
+    screen:QrScannerScreen,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="qrcode" size={24} color={tintColor} />
+      )
+    }
+  },
+  Profil:{
     screen:ProfilScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
-          <AntDesign name="dashboard" size={24} color={tintColor} />
+          <AntDesign name="profile" size={24} color={tintColor} />
       )
     }
   },
   /*Sætter en spoof screen til at håndtere onpress som gør jeg logger ud med firebase*/
-  LogOut: {
+  Logud: {
     screen: logout_spoofScreen,
     navigationOptions: ({navigation}) => ({
       tabBarOnPress: (scene, jumpToIndex) => {

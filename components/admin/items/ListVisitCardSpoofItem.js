@@ -14,6 +14,8 @@ export default class ListVisitCardSpoofItem extends React.Component{
     render() {
         const{VisitCardItem} = this.props
 
+        console.log("min spoof",VisitCardItem)
+
         return(
             <View style={styles.mainListVisitCardContainer}>
                 <View style={styles.cardImgContainer}>
@@ -72,8 +74,8 @@ const styles = StyleSheet.create({
     mainListVisitCardContainer:{
         alignSelf: "center",
         margin: 10,
-        height:"30%",
-        minHeight:200,
+        height:"20%",
+        minHeight:100,
         backgroundColor:"white",
         marginBottom:30,
         flexDirection: "column",
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         zIndex:1,
         backgroundColor: "white",
         marginTop: -10,
-        padding:20,minHeight:180,
+        padding:20,minHeight:100,
         borderBottomLeftRadius: scale(12),
         borderBottomRightRadius: scale(12)
     },

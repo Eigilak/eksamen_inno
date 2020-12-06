@@ -35,43 +35,14 @@ export default class MyVisitCardsScreen extends React.Component {
     componentDidMount() {
         ScreenOrientation.getOrientationAsync();
         ScreenOrientation.unlockAsync();
-        this._toggle();
 
-        this.getYourVisitCards();
-    }
 
-    componentWillUnmount() {
-        this._unsubscribe();
-    }
-
-    _toggle = () => {
-        if (this._subscription) {
-            this._unsubscribe();
-        } else {
-            this._subscribe();
-        }
-    }
-
-    _subscribe = () => {
-        var onceFired = false;
-        var count = 0
-        this._subscription = DeviceMotion.addListener((deviceMotionData) => {
-            if(deviceMotionData.orientation === 90){
-                if(!onceFired){
-                    this.handleSave();
-                    onceFired = true;
-                }
-            }else {
-                onceFired = false;
-            }
-            this.setState({ orientation:deviceMotionData.orientation })
+        ScreenOrientation.addOrientationChangeListener((deviceMotionData) => {
+           if(deviceMotionData.orientationInfo.orientation === 1){
+               this.handleSave();
+           }
         });
-
-    }
-
-    _unsubscribe = () => {
-        this._subscription && this._subscription.remove();
-        this._subscription = null;
+        this.getYourVisitCards();
     }
 
     handleSave = async () => {
@@ -125,14 +96,22 @@ export default class MyVisitCardsScreen extends React.Component {
         this.props.navigation.navigate('EditMyVisitCard', { id });
     };
 
+    orientationCheck =() => {
+       const {orientation } = this.state;
+
+       const onceFired =
+        console.log(onceFired)
+}
+
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-        const { visitCards,loading,premium_max,hasMotionPermission } = this.state;
+        const { visitCards,loading,premium_max,orientation,onceFired } = this.state;
         // Vi viser ingenting hvis der ikke er data
         if (!visitCards) {
             return null;
         }
 
+        this.orientationCheck();
         // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
         const visitCardsArray = Object.values(visitCards);
         // Vi skal også bruge alle IDer, så vi tager alle keys også.
@@ -165,9 +144,8 @@ export default class MyVisitCardsScreen extends React.Component {
             return (
                 <View style={styles.container}>
                     {/* Title med styling*/ }
-                    <TitleModule title = "Mine Visit Kort"/>
+                    <TitleModule title = {"Mine Visit Kort: "+visitCardsArray.length}/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
-                    <Text>{visitCardsArray.length}</Text>
                     {visitCardsArray.length > 0 ?
                         <FlatList
                             style={styles.inlineScroll}

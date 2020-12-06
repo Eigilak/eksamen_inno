@@ -67,7 +67,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
         const { RecievedvisitCards,loading,premium_max } = this.state;
         // Vi viser ingenting hvis der ikke er data
         if (!RecievedvisitCards) {
-            return null;
+            return <Text> Ingen modtaget VisitKort</Text>;
         }
 
         // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
@@ -103,7 +103,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
             return (
                 <View style={styles.container}>
                     {/* Title med styling*/ }
-                    <TitleModule title = "Mine modtaget visitkort"/>
+                    <TitleModule title = {"Mine modtaget visitkort: "+RecievedvisitCardsArray.length}/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
                     {RecievedvisitCardsArray.length > 0 ?
                         <FlatList

@@ -48,9 +48,9 @@ export default class EditVisitCardScreen extends React.Component {
                 const visitCard = dataObject.val();
                 this.setState({visitCard})
                 //her deles de forskellige værdier op
-                const { address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name} = visitCard;
+                const { address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, email, name} = visitCard;
                 //her sættes staten så f.eks. opgavens titel er loadet når man går ind på siden
-                this.setState({ address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, name});
+                this.setState({ address, company, facebookUrl, id, instagram, jobTitle, email,linkedInUrl, name});
 
             });
 
@@ -63,13 +63,14 @@ export default class EditVisitCardScreen extends React.Component {
     handleJobTitleChange = text => this.setState({ jobTitle: text });
     handleLinkedInUrlChange = text => this.setState({ linkedInUrl: text });
     handlenameChange = text => this.setState({  name: text });
+    handleemailChange = text => this.setState({  email: text });
 
 
     updateTask = () =>  {
 
         const {navigation} = this.props;
         //henter staten på opgavens values
-        const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name,userId} = this.state;
+        const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, email,name,userId} = this.state;
 
         //henter id'et fra navigationen
         const id = this.props.navigation.getParam('id');
@@ -79,7 +80,7 @@ export default class EditVisitCardScreen extends React.Component {
             firebase
                 .database()
                 .ref('/visitCard/my/'+userId+'/'+id )
-                .update({address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name});
+                .update({address, company, facebookUrl, instagram, jobTitle,email, linkedInUrl, name});
             Alert.alert("Dine informationer er nu opdateret :)");
 
             navigation.goBack();
@@ -107,7 +108,24 @@ export default class EditVisitCardScreen extends React.Component {
                 <ListVisitCardSpoofItem
                     VisitCardItem={props}
                 />
-                <ScrollView style={{height:"50%",padding:20, marginBottom:90}}>
+                <ScrollView style={{height:"80%",padding:20, marginBottom:90}}>
+                    <View >
+                        <Text >Navn:</Text>
+                        <TextInput
+                            value={name}
+                            onChangeText={this.handlenameChange}
+                            style={GlobalStyles.inputField}
+                        />
+                    </View>
+                    <View >
+                        <Text >Email:</Text>
+                        <TextInput
+                            value={email}
+                            onChangeText={this.handleemailChange}
+                            style={GlobalStyles.inputField}
+                        />
+                    </View>
+
                     <View >
                         <Text >address</Text>
                         <TextInput
@@ -157,14 +175,7 @@ export default class EditVisitCardScreen extends React.Component {
                         />
                     </View>
 
-                    <View >
-                        <Text >Navn:</Text>
-                        <TextInput
-                            value={name}
-                            onChangeText={this.handlenameChange}
-                            style={GlobalStyles.inputField}
-                        />
-                    </View>
+
 
 
 
