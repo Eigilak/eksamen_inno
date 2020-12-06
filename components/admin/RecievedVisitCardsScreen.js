@@ -1,15 +1,19 @@
 import firebase from "firebase";
-import { StyleSheet, Text, View,Button, FlatList, SafeAreaView } from 'react-native';
+import {StyleSheet, Text, View, Button, FlatList, SafeAreaView, Alert} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
+import {DeviceMotion} from "expo-sensors";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 export default class RecievedVisitCardsScreen extends React.Component {
     state={
         RecievedvisitCards:[],
         loading:false,
-        premium_max:false
+        premium_max:false,
+        urlRecieved:'/visitCard/recieved/',
+        id: firebase.auth().currentUser.uid,
     }
 
     constructor() {
@@ -18,11 +22,14 @@ export default class RecievedVisitCardsScreen extends React.Component {
     componentDidMount() {
         this.getRecievedCards();
     }
+
+
     /*Test af Master*/
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getRecievedCards = async () =>{
-        const {id} = firebase.auth().currentUser.uid;
+
         this.setState({loading:true});
+        const {id} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
             var allVisitCards=[];
@@ -34,7 +41,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
                         console.log(snapshot.val())
                         this.setState({RecievedvisitCards:snapshot.val()})
                         var length = Object.keys(snapshot.val())
-                        if(length.length > 1){
+                        if(length.length > 10){
                             this.setState({premium_max: true})
                         }
                     }
@@ -46,12 +53,14 @@ export default class RecievedVisitCardsScreen extends React.Component {
             console.log("Fejl!! \n",e)
         }
 
+
     }
 
     handleSelectVisitCard = id => {
-        console.log(id)
         this.props.navigation.navigate('SeeRecievedVisitCard', { id });
     };
+
+
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
@@ -62,24 +71,25 @@ export default class RecievedVisitCardsScreen extends React.Component {
         }
 
         // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
-        const visitCardsArray = Object.values(RecievedvisitCards);
+        const RecievedvisitCardsArray = Object.values(RecievedvisitCards);
         // Vi skal også bruge alle IDer, så vi tager alle keys også.
-        const visitCardsKeys = Object.keys(RecievedvisitCards);
+        const RecievedvisitCardsKeys = Object.keys(RecievedvisitCards);
 
         /*render*/
         const renderCardItem = ({item,index}) => {
-            if (item.id !== firebase.auth().currentUser.uid) {
+            const {urlRecieved} = this.state
                 return(
                     <ListVisitCardItem
                         VisitCardItem={item}
-                        id={visitCardsKeys[index]}
+                        userId={firebase.auth().currentUser.uid}
+                        url={urlRecieved}
+                        id={RecievedvisitCardsKeys[index]}
                         onSelect={
                             this.handleSelectVisitCard
                         }
                     />
                 )
 
-            }
         };
 
         if(loading){
@@ -95,12 +105,12 @@ export default class RecievedVisitCardsScreen extends React.Component {
                     {/* Title med styling*/ }
                     <TitleModule title = "Mine modtaget visitkort"/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
-                    {visitCardsArray.length > 0 ?
+                    {RecievedvisitCardsArray.length > 0 ?
                         <FlatList
                             style={styles.inlineScroll}
-                            data={visitCardsArray}
+                            data={RecievedvisitCardsArray}
                             renderItem={renderCardItem}
-                            keyExtractor={(item,index)=>visitCardsKeys[index] }
+                            keyExtractor={(item,index)=>RecievedvisitCardsKeys[index] }
                         />
 
                         : <Text> Ingen modtaget VisitKort</Text>

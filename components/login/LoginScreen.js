@@ -57,7 +57,7 @@ export default class loginScreen extends React.Component {
         const { errorMessage, email, password, isCompleted } = this.state;
         return (
             <View style={GlobalStyles.mainContainer}>
-                <TitleModule title="Velkommen til VisitKort Appen"/>
+                <TitleModule title="Velkommen til PlingIt!"/>
                 <AntDesign name="idcard" size={60} color="#0E71EB" />
                 <View style={GlobalStyles.innerContainer}>
                     <Text style={GlobalStyles.header}>Login</Text>

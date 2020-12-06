@@ -5,6 +5,7 @@ import firebase from "firebase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AntDesign } from '@expo/vector-icons';
 import GlobalStyles from "../../modules/GlobalStyle";
+import {color} from "react-native-reanimated";
 
 let screenWidth = Dimensions.get("window").width;
 let screenHeight = Dimensions.get("window").height;
@@ -15,7 +16,7 @@ export default class ListVisitCardItem extends React.Component{
 
     handlePress = () => {
         // Her pakker vi ting ud fra props
-        const {id, onSelect} = this.props
+        const {id, onSelect,url,userId} = this.props
         // Kalder den onSelect prop vi får, med det ID vi har fået som argument.
         onSelect(id)
     };
@@ -38,13 +39,15 @@ export default class ListVisitCardItem extends React.Component{
 
     // Vi sletter den aktuelle bil
     handleDelete = () => {
-        const { navigation, id} = this.props;
+        const { navigation, id,url,userId} = this.props;
+
+        console.log("sletterurl",id)
 
         try {
             firebase
                 .database()
                 // Vi sætter bilens ID ind i stien
-                .ref('/visitkort/'+id)
+                .ref(url+"/"+userId+"/"+id)
                 // Og fjerner data fra den sti
                 .remove();
 
@@ -56,7 +59,7 @@ export default class ListVisitCardItem extends React.Component{
     };
 
     render() {
-        const{VisitCardItem} = this.props
+        const{VisitCardItem,url} = this.props
 
         return(
                 <View style={styles.mainListVisitCardContainer}>
@@ -93,14 +96,13 @@ export default class ListVisitCardItem extends React.Component{
                                 <Text style={styles.visitcardText}> {VisitCardItem.address} </Text>
                             </View>
                             <View styles={styles.visitCardTextContainer}>
-                                <TouchableOpacity style={GlobalStyles.touchButton}  onPress={this.handlePress} >
+                                <TouchableOpacity style={[GlobalStyles.touchButton, url!=="/visitCard/my/" ? styles.recived: ""]}  onPress={this.handlePress} >
                                     <Text style={{color: "white"}}>
-                                        {VisitCardItem.id === firebase.auth().currentUser.uid ?
+                                        {url === '/visitCard/my/' ?
                                             "Rediger visitkort"
                                             :
                                                 "se visitkort"
                                         }
-
                                     </Text>
                                 </TouchableOpacity>
                                 <View
@@ -150,6 +152,9 @@ const styles = StyleSheet.create({
             height: 1,
             width: 0
         }
+    },
+    recived:{
+        backgroundColor: "#004083",
     },
 
     cardImgContainer:{

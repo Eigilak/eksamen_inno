@@ -49,14 +49,6 @@ const AdminBottomNavigator = createBottomTabNavigator({
       )
     }
   },
-  GyroScreen:{
-    screen:GyroScoopScreen,
-    navigationOptions:{
-      tabBarIcon:({tintColor}) =>(
-          <AntDesign name="dashboard" size={24} color={tintColor} />
-      )
-    }
-  },
   /*Sætter en spoof screen til at håndtere onpress som gør jeg logger ud med firebase*/
   LogOut: {
     screen: logout_spoofScreen,

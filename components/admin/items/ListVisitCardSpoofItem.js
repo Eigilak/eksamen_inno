@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     mainListVisitCardContainer:{
         alignSelf: "center",
         margin: 10,
-        height:"40%",
+        height:"30%",
         minHeight:200,
         backgroundColor:"white",
         marginBottom:30,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     cardImage:{
         width: screenWidth - 20,
-        height: verticalScale(100),
+        height: verticalScale(75),
         resizeMode: "cover",
         borderRadius: 12,
     },
@@ -124,14 +124,14 @@ const styles = StyleSheet.create({
         alignItems: "flex-start"
     },
     profileImage:{
-        width: 100,
-        height: 100,
+        width: 50,
+        height: 50,
         borderRadius:55,
         marginTop:-70
     },
     visitcardText:{
         color: "#000",
-        fontSize: 15,
+        fontSize: 13,
         margin: scale(3)
     },
     icons:{

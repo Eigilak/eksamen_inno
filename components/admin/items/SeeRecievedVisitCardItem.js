@@ -15,8 +15,7 @@ export default class SeeRecievedVisitCardItem extends React.Component {
         jobTitle:'',
         linkedInUrl: '',
         name:'',
-
-
+        userId:firebase.auth().currentUser.uid
     }
     componentDidMount() {
         const id = this.props.navigation.getParam('id');
@@ -24,10 +23,11 @@ export default class SeeRecievedVisitCardItem extends React.Component {
     }
 
     getVisitCard = id =>  {
+        const {userId} = this.state
         //igen her loeades opgavens data (duration, titel, priority) ud fra det id, vi har fået med fra navigationen
         firebase
             .database()
-            .ref('/visitkort/'+id )
+            .ref('/visitCard/recieved/'+"/"+userId+"/"+id )
             .once( 'value', dataObject => {
                 //her hentes opgaven fra databasen
                 const visitCard = dataObject.val();

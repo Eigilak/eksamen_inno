@@ -23,7 +23,7 @@ export default class EditVisitCardScreen extends React.Component {
         address: '',
         company: '',
         facebookUrl: '',
-        id: firebase.auth().currentUser.uid,
+        userId: firebase.auth().currentUser.uid,
         instagram: '',
         jobTitle:'',
         linkedInUrl: '',
@@ -38,10 +38,11 @@ export default class EditVisitCardScreen extends React.Component {
     }
 
     getVisitCard = id =>  {
+        const {userId} = this.state
         //igen her loeades opgavens data (duration, titel, priority) ud fra det id, vi har fået med fra navigationen
         firebase
             .database()
-            .ref('/visitkort/'+id )
+            .ref('/visitCard/my/'+userId+'/'+id )
             .once( 'value', dataObject => {
                 //her hentes opgaven fra databasen
                 const visitCard = dataObject.val();
@@ -68,7 +69,7 @@ export default class EditVisitCardScreen extends React.Component {
 
         const {navigation} = this.props;
         //henter staten på opgavens values
-        const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name} = this.state;
+        const { address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name,userId} = this.state;
 
         //henter id'et fra navigationen
         const id = this.props.navigation.getParam('id');
@@ -77,7 +78,7 @@ export default class EditVisitCardScreen extends React.Component {
             //her opdateres KUN de felter, som vi har sagt må opdateres. (update > push)
             firebase
                 .database()
-                .ref('/visitkort/'+id)
+                .ref('/visitCard/my/'+userId+'/'+id )
                 .update({address, company, facebookUrl, instagram, jobTitle, linkedInUrl, name});
             Alert.alert("Dine informationer er nu opdateret :)");
 

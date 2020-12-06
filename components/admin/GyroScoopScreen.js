@@ -12,7 +12,7 @@ export default class DeviceOrientationExample extends React.Component {
         address: 'Howitzvej 60',
         company: 'CBS',
         facebookUrl: 'https://www.facebook.com/CopenhagenBusinessSchool',
-        id: 'osd4VTO7vPhCIajcRpqrIBDwH9z2',
+        id: firebase.auth().currentUser.uid,
         instagram: 'https://www.instagram.com/cbscph/',
         jobTitle:'President',
         linkedInUrl: 'https://www.linkedin.com/school/copenhagen-business-school/',
@@ -40,16 +40,16 @@ export default class DeviceOrientationExample extends React.Component {
     }
 
     _subscribe = () => {
-        const {onceFired} = this.state;
+        var onceFired = false;
         var count = 0
         this._subscription = DeviceMotion.addListener((deviceMotionData) => {
             if(deviceMotionData.orientation === 90){
-                console.log(count)
-                if(count === 1){
-                    console.log('Done');
-                    count = 0;
+                if(!onceFired){
+                this.handleSave();
+                    onceFired = true;
                 }
-
+            }else {
+                onceFired = false;
             }
             this.setState({ orientation:deviceMotionData.orientation })
         });
@@ -67,19 +67,10 @@ export default class DeviceOrientationExample extends React.Component {
         try {
             await firebase
                 .database()
-                .ref('/visitCard/'+id)
+                .ref('/visitCard/recieved/'+id)
                 .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
 
             Alert.alert(`Visitkort oprettet`);
-            this.setState({
-                address: '',
-                company: '',
-                facebookUrl: '',
-                instagram: '',
-                jobTitle:'',
-                linkedInUrl: '',
-                email: ''
-            });
             navigation.goBack();
 
         } catch (error) {

@@ -1,30 +1,96 @@
 import firebase from "firebase";
-import { StyleSheet, Text, View, FlatList,TouchableOpacity,PermissionsAndroid } from 'react-native';
+import {StyleSheet, Text, View, FlatList, TouchableOpacity, PermissionsAndroid, Alert} from 'react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
-
-
-
-
 //Screens
 import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
+import * as ScreenOrientation from "expo-screen-orientation";
+import {DeviceMotion} from "expo-sensors";
 
 export default class MyVisitCardsScreen extends React.Component {
     state={
         visitCards:[],
         loading:false,
         premium_max:false,
+        myVisitCard:'/visitCard/my/',
         hasMotionPermission: null,
-        id:firebase.auth().currentUser.uid
+        deviceMotionData: {},
+        orientation:0,
+        onceFired:false,
+        address: 'Howitzvej 60',
+        company: 'CBS',
+        facebookUrl: 'https://www.facebook.com/CopenhagenBusinessSchool',
+        id: firebase.auth().currentUser.uid,
+        instagram: 'https://www.instagram.com/cbscph/',
+        jobTitle:'President',
+        linkedInUrl: 'https://www.linkedin.com/school/copenhagen-business-school/',
+        name:'Karl Emil Jensen',
+        email:'cbs@student.cbs.dk'
     }
 
     constructor() {
         super();
     }
     componentDidMount() {
+        ScreenOrientation.getOrientationAsync();
+        ScreenOrientation.unlockAsync();
+        this._toggle();
+
         this.getYourVisitCards();
     }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
+    _toggle = () => {
+        if (this._subscription) {
+            this._unsubscribe();
+        } else {
+            this._subscribe();
+        }
+    }
+
+    _subscribe = () => {
+        var onceFired = false;
+        var count = 0
+        this._subscription = DeviceMotion.addListener((deviceMotionData) => {
+            if(deviceMotionData.orientation === 90){
+                if(!onceFired){
+                    this.handleSave();
+                    onceFired = true;
+                }
+            }else {
+                onceFired = false;
+            }
+            this.setState({ orientation:deviceMotionData.orientation })
+        });
+
+    }
+
+    _unsubscribe = () => {
+        this._subscription && this._subscription.remove();
+        this._subscription = null;
+    }
+
+    handleSave = async () => {
+        const { address, company,facebookUrl,id,instagram,jobTitle,linkedInUrl,name,email } = this.state;
+        const {navigation} = this.props;
+        try {
+            await firebase
+                .database()
+                .ref('/visitCard/recieved/'+id)
+                .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
+
+            Alert.alert(`Du har modtaget et visitkort! `);
+            navigation.goBack();
+
+        } catch (error) {
+            Alert.alert(`Error: ${error.message}`);
+        }
+
+    };
 
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getYourVisitCards = async () =>{
@@ -36,11 +102,9 @@ export default class MyVisitCardsScreen extends React.Component {
             var allVisitCards=[];
             await firebase
                 .database()
-                .ref('/visitCard/'+id)
+                .ref('/visitCard/my/'+id)
                 .on('value', snapshot =>{
-                    console.log("mine visitkort",snapshot.val())
                     if(snapshot.val()){
-                        console.log(snapshot.val())
                         this.setState({visitCards:snapshot.val()})
                         var length = Object.keys(snapshot.val())
                         if(length.length > 10){
@@ -76,28 +140,19 @@ export default class MyVisitCardsScreen extends React.Component {
 
         /*render*/
         const renderCardItem = ({item,index}) => {
-            if (item.id === firebase.auth().currentUser.uid) {
+            const {myVisitCard} = this.state;
                 return(
                     <ListVisitCardItem
                         VisitCardItem={item}
+                        url={myVisitCard}
+                        userId={firebase.auth().currentUser.uid}
                         id={visitCardsKeys[index]}
                         onSelect={
                             this.handleSelectVisitCard
                         }
                     />
                 )
-
-            }
         };
-
-        if (hasMotionPermission === false) {
-            return (
-                <View>
-                    <Text>Du har ikke adgang til kamera.</Text>
-                    <Button onPress={this.handleSettingLink} title='Get permissions to access Motion'> </Button>
-                </View>
-            );
-        }
 
         if(loading){
             return (
@@ -112,6 +167,7 @@ export default class MyVisitCardsScreen extends React.Component {
                     {/* Title med styling*/ }
                     <TitleModule title = "Mine Visit Kort"/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
+                    <Text>{visitCardsArray.length}</Text>
                     {visitCardsArray.length > 0 ?
                         <FlatList
                             style={styles.inlineScroll}
