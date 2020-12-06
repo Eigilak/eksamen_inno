@@ -40,10 +40,10 @@ export default class CreateVisitCardScreen extends React.Component {
             try {
                await firebase
                   .database()
-                  .ref('/visitkort/')
+                  .ref('/visitCard/'+id)
                   .push({ id, name, email, address, company,jobTitle, facebookUrl, instagram,linkedInUrl });
 
-              Alert.alert(`Saved`);
+              Alert.alert(`Visitkort oprettet`);
               this.setState({
                address: '',
                 company: '',

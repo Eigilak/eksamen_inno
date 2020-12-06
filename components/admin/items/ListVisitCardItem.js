@@ -1,4 +1,4 @@
-import {Button, Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View,Alert} from 'react-native';
+import {Button, Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View,Alert,Platform} from 'react-native';
 import * as React from 'react';
 import {scale, verticalScale} from "react-native-size-matters";
 import firebase from "firebase";
@@ -22,7 +22,7 @@ export default class ListVisitCardItem extends React.Component{
 
     confirmDelete = () => {
         if(Platform.OS ==='ios' || Platform.OS ==='android'){
-            Alert.alert('Er du sikkert?', 'Vil du gerne slette bilen?', [
+            Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
                 { text: 'Cancel', style: 'cancel' },
                 // Vi bruger this.handleDelete som eventHandler til onPress
                 { text: 'Delete', style: 'destructive', onPress: this.handleDelete },

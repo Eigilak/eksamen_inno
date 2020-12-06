@@ -113,6 +113,8 @@ export default class ProfilScreen extends React.Component {
                      console.log("Email updated!");
                  }).catch((error) => { console.log("Fejl i password \n",error); });
              }).catch((error) => { console.log(error); });
+
+             this.setState({})
          }
 
         try {
@@ -129,7 +131,8 @@ export default class ProfilScreen extends React.Component {
                 }
             }else {
                 try {
-                     await firebase
+                    console.log("hvis der er data")
+                    await firebase
                         .database()
                         .ref('/UserAttributes/'+unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret

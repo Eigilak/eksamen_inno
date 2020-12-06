@@ -16,6 +16,7 @@ export default class MyVisitCardsScreen extends React.Component {
         loading:false,
         premium_max:false,
         hasMotionPermission: null,
+        id:firebase.auth().currentUser.uid
     }
 
     constructor() {
@@ -29,13 +30,15 @@ export default class MyVisitCardsScreen extends React.Component {
     getYourVisitCards = async () =>{
 
         this.setState({loading:true});
+        const {id} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
             var allVisitCards=[];
             await firebase
                 .database()
-                .ref('/visitkort')
+                .ref('/visitCard/'+id)
                 .on('value', snapshot =>{
+                    console.log("mine visitkort",snapshot.val())
                     if(snapshot.val()){
                         console.log(snapshot.val())
                         this.setState({visitCards:snapshot.val()})

@@ -21,14 +21,14 @@ export default class RecievedVisitCardsScreen extends React.Component {
     /*Test af Master*/
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getRecievedCards = async () =>{
-
+        const {id} = firebase.auth().currentUser.uid;
         this.setState({loading:true});
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
             var allVisitCards=[];
             await firebase
                 .database()
-                .ref('/visitkort')
+                .ref('/visitCard/recieved/'+id)
                 .on('value', snapshot =>{
                     if(snapshot.val()){
                         console.log(snapshot.val())
@@ -93,7 +93,7 @@ export default class RecievedVisitCardsScreen extends React.Component {
             return (
                 <View style={styles.container}>
                     {/* Title med styling*/ }
-                    <TitleModule title = "Mine Visit Kort"/>
+                    <TitleModule title = "Mine modtaget visitkort"/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
                     {visitCardsArray.length > 0 ?
                         <FlatList

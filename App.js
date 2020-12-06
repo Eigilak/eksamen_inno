@@ -18,7 +18,7 @@ import RecievedVisitCardsScreen from "./components/admin/RecievedVisitCardsScree
 import ProfilScreen from "./components/admin/ProfilScreen";
 import EditVisitCardScreen from "./components/admin/EditVisitCardScreen";
 import SeeRecievedVisitCardItem from "./components/admin/items/SeeRecievedVisitCardItem";
-
+import GyroScoopScreen from "./components/admin/GyroScoopScreen";
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
   LogBox.ignoreAllLogs(true)
@@ -43,6 +43,14 @@ const AdminBottomNavigator = createBottomTabNavigator({
   },
   ProfileScreen:{
     screen:ProfilScreen,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="dashboard" size={24} color={tintColor} />
+      )
+    }
+  },
+  GyroScreen:{
+    screen:GyroScoopScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
           <AntDesign name="dashboard" size={24} color={tintColor} />
