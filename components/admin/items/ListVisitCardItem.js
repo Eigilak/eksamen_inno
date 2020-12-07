@@ -3,7 +3,7 @@ import * as React from 'react';
 import {scale, verticalScale} from "react-native-size-matters";
 import firebase from "firebase";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { AntDesign } from '@expo/vector-icons';
+import {AntDesign, MaterialIcons,Entypo} from '@expo/vector-icons';
 import GlobalStyles from "../../modules/GlobalStyle";
 import {color} from "react-native-reanimated";
 
@@ -16,9 +16,17 @@ export default class ListVisitCardItem extends React.Component{
 
     handlePress = () => {
         // Her pakker vi ting ud fra props
-        const {id, onSelect,url,userId} = this.props
+        const {id, onSelect,url,userId,qrSelect} = this.props
         // Kalder den onSelect prop vi får, med det ID vi har fået som argument.
-        onSelect(id)
+        onSelect(id);
+        qrSelect(id)
+    };
+
+    handlePressQr = () => {
+        // Her pakker vi ting ud fra props
+        const {id, qrSelect} = this.props
+
+        qrSelect(id)
     };
 
     confirmDelete = () => {
@@ -75,6 +83,17 @@ export default class ListVisitCardItem extends React.Component{
                                 <AntDesign name="closecircle" size={25} color="white" />
                             </TouchableOpacity>
                         </Text>
+
+                        <TouchableOpacity style={[GlobalStyles.touchButton, url!=="/visitCard/my/" ? styles.recived: "",{position:"absolute",left:5,top:5}]}  onPress={this.handlePress} >
+                            <Text style={{color: "white"}}>
+                                {url === '/visitCard/my/' ?
+                                    <Entypo name="edit" size={15} color="white" />
+                                    :
+                                    "se visitkort"
+                                }
+                            </Text>
+                        </TouchableOpacity>
+
                     </View>
                     <View style={styles.textContainer}>
                         <View style={styles.textInnerContainer}>
@@ -96,15 +115,18 @@ export default class ListVisitCardItem extends React.Component{
                                 <Text style={styles.visitcardText}> {VisitCardItem.address} </Text>
                             </View>
                             <View styles={styles.visitCardTextContainer}>
-                                <TouchableOpacity style={[GlobalStyles.touchButton, url!=="/visitCard/my/" ? styles.recived: ""]}  onPress={this.handlePress} >
-                                    <Text style={{color: "white"}}>
-                                        {url === '/visitCard/my/' ?
-                                            "Rediger visitkort"
-                                            :
-                                                "se visitkort"
-                                        }
+
+
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    style={[GlobalStyles.touchButton,{maxWidth: 45}]}
+                                    onPress={this.handlePressQr}
+                                >
+                                    <Text style={{color:"white"}}>
+                                        <AntDesign name="qrcode" size={24} color={"white"} />
                                     </Text>
                                 </TouchableOpacity>
+
                                 <View
                                     style={ styles.icons}
                                 >

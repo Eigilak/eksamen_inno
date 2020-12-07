@@ -29,8 +29,6 @@ export default class EditVisitCardScreen extends React.Component {
         linkedInUrl: '',
         name:'',
         email:''
-
-
     }
     componentDidMount() {
         const id = this.props.navigation.getParam('id');

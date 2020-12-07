@@ -19,7 +19,9 @@ import ProfilScreen from "./components/admin/ProfilScreen";
 import EditVisitCardScreen from "./components/admin/EditVisitCardScreen";
 import SeeRecievedVisitCardItem from "./components/admin/items/SeeRecievedVisitCardItem";
 import QrScannerScreen from "./components/admin/QrScannerScreen";
-import GyroScoopScreen from "./components/admin/GyroScoopScreen";
+import MyQRCodeScreen from "./components/admin/MyQRCodeScreen";
+
+
 /*Hvis det ikke er web fjern logbox*/
 if(Platform.OS !== "web"){
   LogBox.ignoreAllLogs(true)
@@ -121,6 +123,14 @@ const AdminStackNavigation = createStackNavigator({
   },
   QR:{
     screen:QrScannerScreen,
+    navigationOptions:{
+      tabBarIcon:({tintColor}) =>(
+          <AntDesign name="qrcode" size={24} color={tintColor} />
+      ),
+    }
+  },
+  MinQRKode:{
+    screen:MyQRCodeScreen,
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
           <AntDesign name="qrcode" size={24} color={tintColor} />

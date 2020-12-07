@@ -68,6 +68,11 @@ export default class MyVisitCardsScreen extends React.Component {
         this.props.navigation.navigate('EditMyVisitCard', { id });
     };
 
+
+    handleSelectVisitCardQr = id => {
+        this.props.navigation.navigate('MinQRKode', { id });
+    };
+
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
         const { visitCards,loading,premium_max,orientation,onceFired } = this.state;
@@ -91,6 +96,9 @@ export default class MyVisitCardsScreen extends React.Component {
                         id={visitCardsKeys[index]}
                         onSelect={
                             this.handleSelectVisitCard
+                        }
+                        qrSelect={
+                            this.handleSelectVisitCardQr
                         }
                     />
                 )
