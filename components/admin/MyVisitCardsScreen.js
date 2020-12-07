@@ -125,7 +125,7 @@ export default class MyVisitCardsScreen extends React.Component {
                             keyExtractor={(item,index)=>visitCardsKeys[index] }
                         />
 
-                        : <Text> Ingen oprettet sad VisitKort</Text>
+                        : <Text> Ingen oprettet VisitKort</Text>
                     }
                     <View style={{right:10,bottom:10, borderWidth:2, borderRadius:50, backgroundColor: "transparent", position:"absolute"}}>
                         <TouchableOpacity

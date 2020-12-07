@@ -19,7 +19,6 @@ export default class ListVisitCardItem extends React.Component{
         const {id, onSelect,url,userId,qrSelect} = this.props
         // Kalder den onSelect prop vi får, med det ID vi har fået som argument.
         onSelect(id);
-        qrSelect(id)
     };
 
     handlePressQr = () => {

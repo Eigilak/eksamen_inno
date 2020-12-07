@@ -7,7 +7,8 @@ const GlobalStyles = StyleSheet.create({
         width:"100%",
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20
+        padding: 20,
+        marginTop:10
     },
     innerContainer:{
         minWidth:'80%'

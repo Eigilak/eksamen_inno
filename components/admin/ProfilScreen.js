@@ -161,7 +161,6 @@ export default class ProfilScreen extends React.Component {
                 <ScrollView style={GlobalStyles.createContainer}>
                     <TitleModule title={"Din profil"}/>
                     <View style={GlobalStyles.myInfoContainer}>
-
                         <View>
                             <Text> Email</Text>
                             <TextInput
