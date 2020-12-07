@@ -115,7 +115,7 @@ export default class MyVisitCardsScreen extends React.Component {
             return (
                 <View style={styles.container}>
                     {/* Title med styling*/ }
-                    <TitleModule title = {"Mine Visit Kort: "+visitCardsArray.length}/>
+                    <TitleModule title = {"Mine visitkort: "+visitCardsArray.length}/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }
                     {visitCardsArray.length > 0 ?
                         <FlatList

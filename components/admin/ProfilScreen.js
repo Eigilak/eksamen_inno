@@ -4,6 +4,7 @@ import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
 import GLOBAL from "../modules/GlobalUser"
+import { Checkbox } from 'react-native-paper';
 
 
 export default class ProfilScreen extends React.Component {
@@ -174,7 +175,7 @@ export default class ProfilScreen extends React.Component {
                             <Text> Type</Text>
                             <Picker
                                 selectedValue={type}
-                                style={{height: 50, width: "100%"}}
+                                style={{height: 50, width: 300}}
                                 onValueChange={this.handleChangeType}>
                                 <Picker.Item label="company" value="company" />
                                 <Picker.Item label="personal" value="personal" />

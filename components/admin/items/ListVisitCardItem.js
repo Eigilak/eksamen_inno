@@ -89,7 +89,7 @@ export default class ListVisitCardItem extends React.Component{
                                 {url === '/visitCard/my/' ?
                                     <Entypo name="edit" size={15} color="white" />
                                     :
-                                    "se visitkort"
+                                    <Entypo name="magnifying-glass" size={24} color="white" />
                                 }
                             </Text>
                         </TouchableOpacity>
@@ -116,17 +116,17 @@ export default class ListVisitCardItem extends React.Component{
                             </View>
                             <View styles={styles.visitCardTextContainer}>
 
-
+                                {url === '/visitCard/my/' &&
                                 <TouchableOpacity
                                     activeOpacity={0.8}
-                                    style={[GlobalStyles.touchButton,{maxWidth: 45}]}
+                                    style={[GlobalStyles.touchButton, {maxWidth: 45}]}
                                     onPress={this.handlePressQr}
                                 >
-                                    <Text style={{color:"white"}}>
-                                        <AntDesign name="qrcode" size={24} color={"white"} />
+                                    <Text style={{color: "white"}}>
+                                        <AntDesign name="qrcode" size={24} color={"white"}/>
                                     </Text>
                                 </TouchableOpacity>
-
+                                }
                                 <View
                                     style={ styles.icons}
                                 >
