@@ -63,41 +63,17 @@ export default class CreateVisitCardScreen extends React.Component {
 
     /*Hent mine opgivet informationer fra ProfilScreen*/
     getCurrentUserAttributes = async () =>{
+        const {id} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
-            var allUsers=[];
             await firebase
                 .database()
-                .ref('/UserAttributes/')
+                .ref('/UserAttributes/'+id)
                 .on('value', snapshot => {
-
-                    allUsers.push(snapshot.val());
-
-                    var allUserAttributes = []
-                    var your_userAttribute_id = ''
-                    var push = true;
-                    /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                    allUsers.map((user_item, index) => {
-                        var item_vals = Object.values(user_item)
-                        /*Inner loop for at se om ID er samme som opgivet*/
-                        item_vals.map((item_val, index) => {
-                            if (item_val.id === firebase.auth().currentUser.uid) {
-                                /*Kun en gang push Tabel ID*/
-                                if(push){
-                                    your_userAttribute_id = Object.keys(user_item)
-                                    this.setState({unique_attribute_id:your_userAttribute_id})
-                                    push = false;
-                                }
-                                allUserAttributes.push(item_val)
-                            }
-                        });
-                    });
-
-                    var objAllUserAttributes = {}
-                    if(your_userAttribute_id){
-                        Object.assign(objAllUserAttributes, allUserAttributes);
-                        const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
-                        this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                    if(snapshot.val()){
+                        const userAttributes = Object.values(snapshot.val());
+                        const { address, company, facebookUrl, id, instagram, jobTitle, linkedInUrl, email, name} = userAttributes[0];
+                        this.setState({ address, company, facebookUrl, id, instagram, jobTitle, email,linkedInUrl, name});
                     }
                 });
         }catch (e) {
@@ -117,9 +93,9 @@ export default class CreateVisitCardScreen extends React.Component {
         const {address, email, company, facebookUrl, instagram, jobTitle, linkedInUrl,name} = this.state;
         return(
 
-            <SafeAreaView style={GlobalStyles.mainContainer}>
+            <View style={GlobalStyles.mainContainer}>
                 <TitleModule title = "Opret et nyt visitkort"/>
-                <ScrollView style={GlobalStyles.createContainer}>
+                <ScrollView style={[GlobalStyles.createInputContainer,{width:"100%"}]}>
                     <View>
                         <View>
                             <Text >Navn:</Text>
@@ -201,7 +177,7 @@ export default class CreateVisitCardScreen extends React.Component {
 
 
                     <View styles={GlobalStyles.createButtonContainer}>
-                        <TouchableOpacity activeOpacity={0.8} style={GlobalStyles.touchButton}  onPress={this.handleSave}>
+                        <TouchableOpacity activeOpacity={0.8} style={[GlobalStyles.touchButton,{marginBottom:10}]}  onPress={this.handleSave}>
                             <Text style={{color:"white",textAlign:"center"}}>Gem visitkort</Text>
                         </TouchableOpacity>
 
@@ -211,7 +187,7 @@ export default class CreateVisitCardScreen extends React.Component {
 
                     </View>
              </ScrollView>
-            </SafeAreaView>
+            </View>
         );
     }
 }

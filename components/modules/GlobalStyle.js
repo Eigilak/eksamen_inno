@@ -20,7 +20,7 @@ const GlobalStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius:4,
         marginBottom:10,
-        padding: 10,
+        padding: 10
     },
     inputFieldError:{
       borderColor:"red"

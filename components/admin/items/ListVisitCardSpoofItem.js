@@ -14,8 +14,6 @@ export default class ListVisitCardSpoofItem extends React.Component{
     render() {
         const{VisitCardItem} = this.props
 
-        console.log("min spoof",VisitCardItem)
-
         return(
             <View style={styles.mainListVisitCardContainer}>
                 <View style={styles.cardImgContainer}>

@@ -55,42 +55,21 @@ export default class ProfilScreen extends React.Component {
     }
 
     getCurrentUserAttributes = async () =>{
+        const {id} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
             var allUsers=[];
              await firebase
                  .database()
-                 .ref('/UserAttributes/')
+                 .ref('/UserAttributes/'+id)
                  .on('value', snapshot => {
                      if(snapshot.val()){
-                         allUsers.push(snapshot.val());
-
-                         var allUserAttributes = []
-                         var your_userAttribute_id = ''
-                         var push = true;
-                         /*Sorter all bruger attributter og gem dem der matcher med nuværende brugers ID*/
-                         allUsers.map((user_item, index) => {
-                             var item_vals = Object.values(user_item)
-                             /*Inner loop for at se om ID er samme som opgivet*/
-                             item_vals.map((item_val, index) => {
-                                 if (item_val.id === firebase.auth().currentUser.uid) {
-                                     /*Kun en gang push Tabel ID*/
-                                     if(push){
-                                         your_userAttribute_id = Object.keys(user_item)
-                                         this.setState({unique_attribute_id:your_userAttribute_id})
-                                         push = false;
-                                     }
-                                     allUserAttributes.push(item_val)
-                                 }
-                             });
-                         });
-
-                         var objAllUserAttributes = {}
-                         if(your_userAttribute_id){
-                             Object.assign(objAllUserAttributes, allUserAttributes);
-                             const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = objAllUserAttributes[0]
-                             this.setState({name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram})
-                         }
+                         const currentAttributes = Object.values(snapshot.val());
+                         const currentIdKeys = Object.keys(snapshot.val())
+                         const unique_attribute_id = currentIdKeys[0]
+                         console.log(currentAttributes)
+                             const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = currentAttributes[0]
+                             this.setState({name, address, jobTitle, company, linkedInUrl,unique_attribute_id, facebookUrl, instagram})
                      }
                   });
         }catch (e) {
@@ -111,7 +90,6 @@ export default class ProfilScreen extends React.Component {
              this.reauthenticate(currentPassword).then(() => {
                  var user = firebase.auth().currentUser;
                  user.updateEmail(newEmail).then(() => {
-                     console.log("Email updated!");
                  }).catch((error) => { console.log("Fejl i password \n",error); });
              }).catch((error) => { console.log(error); });
 
@@ -123,7 +101,7 @@ export default class ProfilScreen extends React.Component {
                 console.log("hvis der ikke er data")
                 const reference = firebase
                     .database()
-                    .ref('/UserAttributes/')
+                    .ref('/UserAttributes/'+id)
                     .push({ id,name,type, address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
                 if(Platform.OS != "web"){
                     Alert.alert("Din info er nu opdateret");
@@ -133,12 +111,13 @@ export default class ProfilScreen extends React.Component {
             }else {
                 try {
                     console.log("hvis der er data")
+
                     await firebase
                         .database()
-                        .ref('/UserAttributes/'+unique_attribute_id)
+                        .ref('/UserAttributes/'+id+"/"+unique_attribute_id)
                         // Vi bruger update, så kun de felter vi angiver, bliver ændret
-                        .update({ id,name,type ,address, jobTitle, company, linkedInUrl, facebookUrl, instagram });
-                         this.setState({name, address,type,jobTitle, company, linkedInUrl, facebookUrl, instagram})
+                        .update({ id,name,type ,address, jobTitle, company,email, linkedInUrl, facebookUrl, instagram });
+
                     // Når bilen er ændret, går vi tilbage.
                     if(Platform.OS != "web"){
                         Alert.alert("Din info er nu opdateret");
@@ -190,42 +169,69 @@ export default class ProfilScreen extends React.Component {
                             />
                         </View>
 
-                        <TextInput
-                            placeholder="Addresse "
-                            value={address}
-                            onChangeText={this.handleChangeAddress}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="company"
-                            value={company}
-                            onChangeText={this.handleChangeCompany}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="Jobtitel"
-                            value={jobTitle}
-                            onChangeText={this.handleChangeJobTitle}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="facebook link"
-                            value={facebookUrl}
-                            onChangeText={this.handleChangeFacebookUrl}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="LinkedIn Url"
-                            value={linkedInUrl}
-                            onChangeText={this.handleChangeLinkedInUrl}
-                            style={GlobalStyles.inputField}
-                        />
-                        <TextInput
-                            placeholder="instagram"
-                            value={instagram}
-                            onChangeText={this.handleChangeInstagram}
-                            style={GlobalStyles.inputField}
-                        />
+                        <View>
+                            <Text>Addresse</Text>
+                            <TextInput
+                                placeholder="Addresse "
+                                value={address}
+                                onChangeText={this.handleChangeAddress}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>Virksomhed</Text>
+                            <TextInput
+                                placeholder="company"
+                                value={company}
+                                onChangeText={this.handleChangeCompany}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>Jobtitel</Text>
+                            <TextInput
+                                placeholder="Jobtitel"
+                                value={jobTitle}
+                                onChangeText={this.handleChangeJobTitle}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>
+                                Facebook link
+                            </Text>
+                            <TextInput
+                                placeholder="facebook link"
+                                value={facebookUrl}
+                                onChangeText={this.handleChangeFacebookUrl}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>
+                                LinkedIn Url
+                            </Text>
+                            <TextInput
+                                placeholder="LinkedIn Url"
+                                value={linkedInUrl}
+                                onChangeText={this.handleChangeLinkedInUrl}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>Instagram url</Text>
+                            <TextInput
+                                placeholder="instagram"
+                                value={instagram}
+                                onChangeText={this.handleChangeInstagram}
+                                style={GlobalStyles.inputField}
+                            />
+                        </View>
 
                         <View>
                             <TextInput

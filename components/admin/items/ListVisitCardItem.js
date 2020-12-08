@@ -48,8 +48,6 @@ export default class ListVisitCardItem extends React.Component{
     handleDelete = () => {
         const { navigation, id,url,userId} = this.props;
 
-        console.log("sletterurl",id)
-
         try {
             firebase
                 .database()
