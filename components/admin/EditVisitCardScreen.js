@@ -18,7 +18,7 @@ import {AntDesign} from "@expo/vector-icons";
 
 export default class EditVisitCardScreen extends React.Component {
 
-    //hente noget data der bliver preloadet. Når der skal ændres.
+    //hente noget data der blihver preloadet. Når der skal ændres.
     state ={
         address: '',
         company: '',
