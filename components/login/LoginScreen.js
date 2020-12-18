@@ -6,6 +6,7 @@ import {
     TextInput,
     ActivityIndicator,
     StyleSheet,
+    Image,
     Alert,
 } from 'react-native';
 import firebase from 'firebase';
@@ -58,7 +59,10 @@ export default class loginScreen extends React.Component {
         return (
             <View style={GlobalStyles.mainContainer}>
                 <TitleModule title="Velkommen til PlingIt!"/>
-                <AntDesign name="idcard" size={60} color="#0E71EB" />
+                <Image
+                    source={require('../../assets/icon.png')}
+                    style={{width:"60%",height:"30%",marginBottom:-20,marginTop:-20}}
+                />
                 <View style={GlobalStyles.innerContainer}>
                     <Text style={GlobalStyles.header}>Login</Text>
                     <TextInput

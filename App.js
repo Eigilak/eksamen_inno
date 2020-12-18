@@ -205,7 +205,7 @@ export default class App extends React.Component{
 
   /*Init*/
   init = () =>{
-    const fireBaseConfig ={
+    const fireBaseConfig = {
       apiKey: "AIzaSyAlOUjJY2erM9bvxtre9RYVCVF_dLXOkmY",
       authDomain: "eksamen-innovation.firebaseapp.com",
       databaseURL: "https://eksamen-innovation.firebaseio.com",
@@ -213,7 +213,7 @@ export default class App extends React.Component{
       storageBucket: "eksamen-innovation.appspot.com",
       messagingSenderId: "1004695638499",
       appId: "1:1004695638499:web:bc9d8a5a25f8385bda90d6"
-    }
+    };
 // vigtigt at tilføje nedestående if statement, da ellers init firebase flere gange
     if (!firebase.apps.length) {
       firebase.initializeApp(fireBaseConfig);
