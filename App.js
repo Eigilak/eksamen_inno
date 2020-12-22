@@ -7,7 +7,6 @@ import { AntDesign,MaterialIcons,Ionicons } from '@expo/vector-icons';
 import firebase from "firebase";
 import {createStackNavigator} from "react-navigation-stack";
 import * as Permissions from 'expo-permissions';
-import { DeviceMotion } from 'expo-sensors';
 /*Screens*/
 import LoginScreen from "./components/login/LoginScreen";
 import SignupScreen from "./components/login/SignupScreen";

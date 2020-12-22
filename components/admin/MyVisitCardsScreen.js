@@ -5,8 +5,6 @@ import GlobalStyles from "../modules/GlobalStyle";
 //Screens
 import ListVisitCardItem from "./items/ListVisitCardItem";
 import TitleModule from "../modules/TitleModule.js";
-import * as ScreenOrientation from "expo-screen-orientation";
-import {DeviceMotion} from "expo-sensors";
 
 export default class MyVisitCardsScreen extends React.Component {
     state={
@@ -137,7 +135,7 @@ export default class MyVisitCardsScreen extends React.Component {
 
         if(loading){
             return (
-                <View style={styles.mainContainer}>
+                <View style={GlobalStyles.mainContainer}>
                     <TitleModule title = "Loading....."/>
                 </View>
 
