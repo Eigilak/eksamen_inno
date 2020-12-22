@@ -1,5 +1,6 @@
 import firebase from "firebase";
-import {StyleSheet, Text, TextInput, View,Button,Alert, ScrollView,Platform,Picker } from 'react-native';
+import {StyleSheet, Text, TextInput, View,Button,Alert, ScrollView,Platform } from 'react-native';
+import RadioButtonRN from 'radio-buttons-react-native';
 import * as React from 'react';
 import GlobalStyles from "../modules/GlobalStyle";
 import TitleModule from "../modules/TitleModule";
@@ -27,6 +28,7 @@ export default class ProfilScreen extends React.Component {
         facebookUrl:'',
         instagram:'',
         type:'',
+        radio_initial:'',
         error:true
     }
 
@@ -40,7 +42,10 @@ export default class ProfilScreen extends React.Component {
     handleChangeFacebookUrl = facebookUrl => this.setState({ facebookUrl });
     handleChangeLinkedInUrl = linkedInUrl => this.setState({ linkedInUrl });
     handleChangeInstagram = instagram => this.setState({ instagram });
-    handleChangeType = type => this.setState({ type });
+    handleChangeType = type => {
+        const type_val = type.label;
+        this.setState({ type:type_val });
+    };
 
     /*For ikke at logge ud efter email update køres denne funktion*/
     reauthenticate = (currentPassword) => {
@@ -55,7 +60,7 @@ export default class ProfilScreen extends React.Component {
     }
 
     getCurrentUserAttributes = async () =>{
-        const {id} = this.state;
+        const {id,type} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
             var allUsers=[];
@@ -68,19 +73,25 @@ export default class ProfilScreen extends React.Component {
                          const currentIdKeys = Object.keys(snapshot.val())
                          const unique_attribute_id = currentIdKeys[0]
                          console.log(currentAttributes)
-                             const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram} = currentAttributes[0]
-                             this.setState({name, address, jobTitle, company, linkedInUrl,unique_attribute_id, facebookUrl, instagram})
+                             const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram,type} = currentAttributes[0]
+                             this.setState({name, address, jobTitle, company, type, linkedInUrl,unique_attribute_id, facebookUrl, instagram})
                      }
                   });
         }catch (e) {
             console.log("Fejl!! \n",e)
         }
 
+        if(this.state.type ==='company '){
+            this.setState({radio_initial:1})
+        }else{
+            this.setState({radio_initial:2})
+        }
+
     }
 
     /*Gem brugerprofil*/
     saveProfile = async () =>{
-        var {id,name,email,password,address,type, jobTitle, company, linkedInUrl, facebookUrl, instagram,unique_attribute_id} = this.state
+        var {id,name,email,password,address, type , jobTitle, company, linkedInUrl, facebookUrl, instagram,unique_attribute_id} = this.state
         var currentEmail = firebase.auth().currentUser.email;
         var newEmail = email
         var currentPassword = password
@@ -133,8 +144,15 @@ export default class ProfilScreen extends React.Component {
         }
     }
 
+
+
     render() {
-        const { email, name,type,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,error,password,unique_attribute_id } = this.state;
+        const radioBtns = [
+            {label: 'company'},
+            {label: 'personal'}
+        ];
+
+        const { email, name,type,company,address,facebookUrl,linkedInUrl,jobTitle,instagram,password } = this.state;
         return(
             <View style={GlobalStyles.mainContainer}>
                 <ScrollView style={GlobalStyles.createContainer}>
@@ -151,13 +169,14 @@ export default class ProfilScreen extends React.Component {
                         </View>
                         <View>
                             <Text> Type</Text>
-                            <Picker
-                                selectedValue={type}
-                                style={{height: 50, width: 300}}
-                                onValueChange={this.handleChangeType}>
-                                <Picker.Item label="company" value="company" />
-                                <Picker.Item label="personal" value="personal" />
-                            </Picker>
+
+                            <RadioButtonRN
+                                data={radioBtns}
+                                value={type}
+                                initial={1}
+                                activeColor={"black"}
+                                selectedBtn={this.handleChangeType}
+                            />
                         </View>
                         <View>
                             <Text>Navn</Text>

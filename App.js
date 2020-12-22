@@ -142,8 +142,7 @@ const AdminStackNavigation = createStackNavigator({
     navigationOptions:{
       tabBarIcon:({tintColor}) =>(
           <AntDesign name="dashboard" size={24} color={tintColor} />
-      ),
-      headerShown:false
+      )
     }
   },
   SeeRecievedVisitCard:{

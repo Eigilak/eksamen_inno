@@ -86,17 +86,47 @@ export default class RecievedVisitCardsScreen extends React.Component {
 
     };
 
+    confirmDelete = () => {
+        if(Platform.OS ==='ios' || Platform.OS ==='android'){
+            Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
+                { text: 'Cancel', style: 'cancel' },
+                // Vi bruger this.handleDelete som eventHandler til onPress
+                { text: 'Delete', style: 'destructive', onPress: this.handleDelete },
+            ]);
+        }
+    };
+
+    // Vi spørger brugeren om han er sikker
+
+    // Vi sletter den aktuelle bil
+    handleDelete =  async () => {
+        try {
+            const response = await firebase
+                .database()
+                // Vi sætter bilens ID ind i stien
+                .ref("/visitCard/recieved/"+userId+"/"+id)
+                // Og fjerner data fra den sti
+                .remove();
+
+            console.log("response delte",response)
+
+            // Og går tilbage når det er udført
+        } catch (error) {
+            Alert.alert(error.message);
+        }
+    };
+
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-        const { RecievedvisitCards,loading,premium_max } = this.state;
+        const { RecievedvisitCards,loading,premium_max,id } = this.state;
         // Vi viser ingenting hvis der ikke er data
         if (!RecievedvisitCards) {
             return <Text> Ingen modtaget VisitKort</Text>;
         }
 
         // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
-        const RecievedvisitCardsArray = Object.values(RecievedvisitCards);
+        let RecievedvisitCardsArray = Object.values(RecievedvisitCards);
         // Vi skal også bruge alle IDer, så vi tager alle keys også.
         const RecievedvisitCardsKeys = Object.keys(RecievedvisitCards);
 
@@ -107,10 +137,40 @@ export default class RecievedVisitCardsScreen extends React.Component {
                     <ListVisitCardItem
                         VisitCardItem={item}
                         userId={firebase.auth().currentUser.uid}
-                        url={urlRecieved}
+                        type_of={"recieved"}
                         id={RecievedvisitCardsKeys[index]}
                         onSelect={
                             this.handleSelectVisitCard
+                        }
+                        deleteItem={
+                            () => {
+                                if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                    Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
+                                        {text: 'Cancel', style: 'cancel'},
+                                        // Vi bruger this.handleDelete som eventHandler til onPress
+                                        {text: 'Delete', style: 'destructive', onPress: async ()=>{
+                                                try {
+                                                    await firebase
+                                                        .database()
+                                                        // Vi sætter bilens ID ind i stien
+                                                        .ref("/visitCard/recieved/"+id+"/"+RecievedvisitCardsKeys[index])
+                                                        // Og fjerner data fra den sti
+                                                        .remove();
+
+                                                     console.log("asdasd",RecievedvisitCardsArray.length)
+
+                                                    if(RecievedvisitCardsArray.length === 1){
+                                                        this.setState({RecievedvisitCards: []})
+                                                    }
+
+                                                    // Og går tilbage når det er udført
+                                                } catch (error) {
+                                                    Alert.alert(error.message);
+                                                }
+                                        }},
+                                    ]);
+                                }
+                            }
                         }
                     />
                 )
@@ -119,14 +179,14 @@ export default class RecievedVisitCardsScreen extends React.Component {
 
         if(loading){
             return (
-                <View style={styles.container}>
+                <View style={GlobalStyles.mainContainer}>
                     <TitleModule title = "Loading....."/>
                 </View>
 
             )
         }else{
             return (
-                <View style={styles.container}>
+                <View style={GlobalStyles.mainContainer}>
                     {/* Title med styling*/ }
                     <TitleModule title = {"Mine modtaget visitkort: "+RecievedvisitCardsArray.length}/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }

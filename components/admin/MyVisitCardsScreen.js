@@ -75,7 +75,7 @@ export default class MyVisitCardsScreen extends React.Component {
 
     /* Her oprettes et array der indeholder information om visitkort*/
     render() {
-        const { visitCards,loading,premium_max,orientation,onceFired } = this.state;
+        const { visitCards,loading,premium_max,orientation,id } = this.state;
         // Vi viser ingenting hvis der ikke er data
         if (!visitCards) {
             return null;
@@ -87,33 +87,64 @@ export default class MyVisitCardsScreen extends React.Component {
 
         /*render*/
         const renderCardItem = ({item,index}) => {
-            const {myVisitCard} = this.state;
-                return(
-                    <ListVisitCardItem
-                        VisitCardItem={item}
-                        url={myVisitCard}
-                        userId={firebase.auth().currentUser.uid}
-                        id={visitCardsKeys[index]}
-                        onSelect={
-                            this.handleSelectVisitCard
+            const {urlRecieved} = this.state
+            return(
+                <ListVisitCardItem
+                    VisitCardItem={item}
+                    userId={firebase.auth().currentUser.uid}
+                    type_of={"my"}
+                    id={visitCardsKeys[index]}
+                    onSelect={
+                        this.handleSelectVisitCard
+                    }
+                    qrSelect={
+                        this.handleSelectVisitCardQr
+                    }
+                    deleteItem={
+                        () => {
+                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
+                                    {text: 'Cancel', style: 'cancel'},
+                                    // Vi bruger this.handleDelete som eventHandler til onPress
+                                    {text: 'Delete', style: 'destructive', onPress: async ()=>{
+                                            try {
+                                                await firebase
+                                                    .database()
+                                                    // Vi sætter bilens ID ind i stien
+                                                    .ref("/visitCard/my/"+id+"/"+visitCardsKeys[index])
+                                                    // Og fjerner data fra den sti
+                                                    .remove();
+
+                                                console.log("asdasd",visitCardsArray.length)
+
+                                                if(visitCardsArray.length === 1){
+                                                    this.setState({visitCards: []})
+                                                }
+
+                                                // Og går tilbage når det er udført
+                                            } catch (error) {
+                                                Alert.alert(error.message);
+                                            }
+                                        }},
+                                ]);
+                            }
                         }
-                        qrSelect={
-                            this.handleSelectVisitCardQr
-                        }
-                    />
-                )
+                    }
+                />
+            )
+
         };
 
         if(loading){
             return (
-                <View style={styles.container}>
+                <View style={styles.mainContainer}>
                     <TitleModule title = "Loading....."/>
                 </View>
 
             )
         }else{
             return (
-                <View style={styles.container}>
+                <View style={GlobalStyles.mainContainer}>
                     {/* Title med styling*/ }
                     <TitleModule title = {"Mine visitkort: "+visitCardsArray.length}/>
                     {/* FlatList komponent med title propertien og en værdi HANS*/ }

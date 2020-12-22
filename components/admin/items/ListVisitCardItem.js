@@ -28,6 +28,13 @@ export default class ListVisitCardItem extends React.Component{
         qrSelect(id)
     };
 
+    handleDelete = ()=> {
+        const {deleteItem} = this.props
+        deleteItem()
+    }
+
+
+/*
     confirmDelete = () => {
         if(Platform.OS ==='ios' || Platform.OS ==='android'){
             Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
@@ -45,26 +52,27 @@ export default class ListVisitCardItem extends React.Component{
     // Vi spørger brugeren om han er sikker
 
     // Vi sletter den aktuelle bil
-    handleDelete = () => {
+    handleDelete =  async () => {
         const { navigation, id,url,userId} = this.props;
 
         try {
-            firebase
+            const response = await firebase
                 .database()
                 // Vi sætter bilens ID ind i stien
                 .ref(url+"/"+userId+"/"+id)
                 // Og fjerner data fra den sti
                 .remove();
 
+            console.log("response delte",response)
+
             // Og går tilbage når det er udført
         } catch (error) {
             Alert.alert(error.message);
         }
-
-    };
+    };*/
 
     render() {
-        const{VisitCardItem,url} = this.props
+        const{VisitCardItem,type_of} = this.props
 
         return(
                 <View style={styles.mainListVisitCardContainer}>
@@ -76,14 +84,14 @@ export default class ListVisitCardItem extends React.Component{
                             style={styles.cardImage}
                         />
                         <Text style={{textAlign:"right", position:"absolute",right:5, paddingHorizontal:10,paddingTop:10}}>
-                            <TouchableOpacity onPress={this.confirmDelete}>
+                            <TouchableOpacity onPress={this.handleDelete}>
                                 <AntDesign name="closecircle" size={25} color="white" />
                             </TouchableOpacity>
                         </Text>
 
-                        <TouchableOpacity style={[GlobalStyles.touchButton, url!=="/visitCard/my/" ? styles.recived: "",{position:"absolute",left:5,top:5}]}  onPress={this.handlePress} >
+                        <TouchableOpacity style={[GlobalStyles.touchButton, type_of!=="my" ? styles.recived: "",{position:"absolute",left:5,top:5}]}  onPress={this.handlePress} >
                             <Text style={{color: "white"}}>
-                                {url === '/visitCard/my/' ?
+                                {type_of === 'my' ?
                                     <Entypo name="edit" size={15} color="white" />
                                     :
                                     <Entypo name="magnifying-glass" size={24} color="white" />
@@ -113,7 +121,7 @@ export default class ListVisitCardItem extends React.Component{
                             </View>
                             <View styles={styles.visitCardTextContainer}>
 
-                                {url === '/visitCard/my/' &&
+                                {type_of === 'my' &&
                                 <TouchableOpacity
                                     activeOpacity={0.8}
                                     style={[GlobalStyles.touchButton, {maxWidth: 45}]}

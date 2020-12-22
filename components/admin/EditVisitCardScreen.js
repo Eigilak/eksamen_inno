@@ -96,12 +96,12 @@ export default class EditVisitCardScreen extends React.Component {
             email,address, company, facebookUrl, instagram, jobTitle,name, linkedInUrl
         }
         return(
-            <View style={{paddingTop:30}}>
-                <Text style={{textAlign:"right", paddingHorizontal:20}}>
+            <View style={{paddingTop:10}}>
+              {/*  <Text style={{textAlign:"right", top:40,marginLeft:10,position:"absolute",zIndex:20000}}>
                     <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                        <AntDesign name="closecircle" size={25} color="#0a66c2" />
+                        <AntDesign name="back" size={50} color="white" />
                     </TouchableOpacity>
-                </Text>
+                </Text>*/}
 
                 <ListVisitCardSpoofItem
                     VisitCardItem={props}

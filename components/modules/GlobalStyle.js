@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet,Platform} from "react-native";
 
 const GlobalStyles = StyleSheet.create({
     mainContainer:{
@@ -7,8 +7,8 @@ const GlobalStyles = StyleSheet.create({
         width:"100%",
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20,
-        marginTop:10
+        padding: 0,
+        marginTop:(Platform.OS === 'ios') ? 20 : 15
     },
     innerContainer:{
         minWidth:'80%'
