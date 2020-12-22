@@ -10,6 +10,9 @@ const GlobalStyles = StyleSheet.create({
         padding: 0,
         marginTop:(Platform.OS === 'ios') ? 20 : 15
     },
+    createInputContainer:{
+      padding:10
+    },
     innerContainer:{
         minWidth:'80%'
     },
