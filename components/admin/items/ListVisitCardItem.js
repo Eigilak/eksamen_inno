@@ -34,42 +34,6 @@ export default class ListVisitCardItem extends React.Component{
     }
 
 
-/*
-    confirmDelete = () => {
-        if(Platform.OS ==='ios' || Platform.OS ==='android'){
-            Alert.alert('Er du sikkert?', 'Vil du gerne slette visitkortet?', [
-                { text: 'Cancel', style: 'cancel' },
-                // Vi bruger this.handleDelete som eventHandler til onPress
-                { text: 'Delete', style: 'destructive', onPress: this.handleDelete },
-            ]);
-        } else {
-            if(confirm('Er du sikker på du vil slette denne bil?')){
-                this.handleDelete()
-            }
-        }
-    };
-
-    // Vi spørger brugeren om han er sikker
-
-    // Vi sletter den aktuelle bil
-    handleDelete =  async () => {
-        const { navigation, id,url,userId} = this.props;
-
-        try {
-            const response = await firebase
-                .database()
-                // Vi sætter bilens ID ind i stien
-                .ref(url+"/"+userId+"/"+id)
-                // Og fjerner data fra den sti
-                .remove();
-
-            console.log("response delte",response)
-
-            // Og går tilbage når det er udført
-        } catch (error) {
-            Alert.alert(error.message);
-        }
-    };*/
 
     render() {
         const{VisitCardItem,type_of} = this.props
@@ -83,7 +47,7 @@ export default class ListVisitCardItem extends React.Component{
                             source={require('../../../assets/visitCard/VisitCard_placeholder.jpg')}
                             style={styles.cardImage}
                         />
-                        <Text style={{textAlign:"right", position:"absolute",right:5, paddingHorizontal:10,paddingTop:10}}>
+                        <Text style={{textAlign:"right", position:"absolute",right:0, paddingHorizontal:10,marginTop:10,marginRight:-10}}>
                             <TouchableOpacity onPress={this.handleDelete}>
                                 <AntDesign name="closecircle" size={25} color="white" />
                             </TouchableOpacity>

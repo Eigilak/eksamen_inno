@@ -72,7 +72,6 @@ export default class ProfilScreen extends React.Component {
                          const currentAttributes = Object.values(snapshot.val());
                          const currentIdKeys = Object.keys(snapshot.val())
                          const unique_attribute_id = currentIdKeys[0]
-                         console.log(currentAttributes)
                              const {name, address, jobTitle, company, linkedInUrl, facebookUrl, instagram,type} = currentAttributes[0]
                              this.setState({name, address, jobTitle, company, type, linkedInUrl,unique_attribute_id, facebookUrl, instagram})
                      }

@@ -113,8 +113,6 @@ export default class MyVisitCardsScreen extends React.Component {
                                                     // Og fjerner data fra den sti
                                                     .remove();
 
-                                                console.log("asdasd",visitCardsArray.length)
-
                                                 if(visitCardsArray.length === 1){
                                                     this.setState({visitCards: []})
                                                 }
