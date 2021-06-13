@@ -63,6 +63,7 @@ export default class ProfilScreen extends React.Component {
         const {id,type} = this.state;
         try {
             /*Kald denne metode for at tjek info på opgivet brugere*/
+            /*lolo*/
             var allUsers=[];
              await firebase
                  .database()
